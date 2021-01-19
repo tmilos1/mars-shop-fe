@@ -1,23 +1,18 @@
-import logo from './logo.svg';
 import './App.css';
+import ProductCard from './components/ProductCard'
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <ProductCard 
+        naslov="KALUP ZA KOLAČE"
+        sifra="24523"
+        slika="/img/24523.jpeg"
+        cena="24,99 RSD"
+        opisPakovanja="39,5x28x3,5cm"
+        transportnoPakovanje="40 kom"
+        minPakovanje="1 kom"
+      />
     </div>
   );
 }
