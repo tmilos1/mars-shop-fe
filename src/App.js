@@ -7,7 +7,7 @@ function App() {
             <ProductCard
                 naslov="KALUP ZA KOLAČE"
                 sifra="24523"
-                slika="/img/24523.jpeg"
+                slika="/img/manje/15000.jpg"
                 cena="24,99 RSD"
                 opisPakovanja="39,5x28x3,5cm"
                 transportnoPakovanje="40 kom"

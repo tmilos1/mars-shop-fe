@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import Card from '@material-ui/core/Card'
 import CardHeader from '@material-ui/core/CardHeader'
@@ -7,6 +7,8 @@ import CardContent from '@material-ui/core/CardContent'
 import CardActions from '@material-ui/core/CardActions'
 import Button from '@material-ui/core/Button'
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart'
+
+import LightBox from '../LightBox'
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -48,7 +50,17 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 export default function ProductCard(props) {
-    const classes = useStyles();
+    const classes = useStyles()
+
+    const [open, setOpen] = useState(false)
+
+    const handleOpen = () => {
+        setOpen(true)
+    }
+
+    const handleClose = () => {
+        setOpen(false)
+    }
 
     const sifraArtiklaText = `Šifra: ${props.sifra}`
 
@@ -62,6 +74,8 @@ export default function ProductCard(props) {
             <CardMedia
                 className={classes.media}
                 image={props.slika}
+                onClick={handleOpen}
+                style={{cursor: 'pointer'}}
             />        
 
             <CardContent>
@@ -72,7 +86,7 @@ export default function ProductCard(props) {
                     <dt className={classes.dt}>Opis pakovanja:</dt>
                     <dd className={classes.dd}>{props.opisPakovanja}</dd>
 
-                    <dt className={classes.dt}>Transportno pakovanje:</dt>
+                    <dt className={classes.dt}>Trans. pakovanje:</dt>
                     <dd className={classes.dd}>{props.transportnoPakovanje}</dd>
 
                     <dt className={classes.dt}>Min. pakovanje:</dt>
@@ -89,6 +103,11 @@ export default function ProductCard(props) {
                     Dodaj u korpu
                 </Button>
             </CardActions>
+
+            <LightBox
+                open={open}
+                onClose={handleClose}
+            />
         </Card>
     )
 }
