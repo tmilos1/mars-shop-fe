@@ -62,18 +62,18 @@ export default function ProductCard(props) {
         setOpen(false)
     }
 
-    const sifraArtiklaText = `Šifra: ${props.sifra}`
+    const sifraArtiklaText = `Šifra: ${props.product.sifra}`
 
     return (
         <Card className={classes.root}>
             <CardHeader
-                title={props.naslov}
+                title={props.product.naslov}
                 subheader={sifraArtiklaText}
             />
             
             <CardMedia
                 className={classes.media}
-                image={props.slika}
+                image={props.product.vecaSlika}
                 onClick={handleOpen}
                 style={{cursor: 'pointer'}}
             />        
@@ -81,16 +81,16 @@ export default function ProductCard(props) {
             <CardContent>
                 <dl className={classes.dl}>
                     <dt className={classes.dt}>Cena:</dt>
-                    <dd className={classes.dd} style={{marginBottom: '10px'}}><span class={classes.cena}>{props.cena}</span></dd>
+                    <dd className={classes.dd} style={{marginBottom: '10px'}}><span class={classes.cena}>{props.product.cena}</span></dd>
 
                     <dt className={classes.dt}>Opis pakovanja:</dt>
-                    <dd className={classes.dd}>{props.opisPakovanja}</dd>
+                    <dd className={classes.dd}>{props.product.opisPakovanja}</dd>
 
                     <dt className={classes.dt}>Trans. pakovanje:</dt>
-                    <dd className={classes.dd}>{props.transportnoPakovanje}</dd>
+                    <dd className={classes.dd}>{props.product.transportnoPakovanje}</dd>
 
                     <dt className={classes.dt}>Min. pakovanje:</dt>
-                    <dd className={classes.dd}>{props.minPakovanje}</dd>
+                    <dd className={classes.dd}>{props.product.minPakovanje}</dd>
                 </dl>       
             </CardContent>
 
@@ -107,11 +107,7 @@ export default function ProductCard(props) {
             <LightBox
                 open={open}
                 onClose={handleClose}
-                naslov={props.naslov}
-                cena={props.cena}
-                opisPakovanja={props.opisPakovanja}
-                transportnoPakovanje={props.transportnoPakovanje}
-                minPakovanje={props.minPakovanje}
+                product={props.product}
             />
         </Card>
     )

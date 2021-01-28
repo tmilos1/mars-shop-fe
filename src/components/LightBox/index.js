@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useCallback, useEffect } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 
 import Modal from '@material-ui/core/Modal'
@@ -6,12 +6,20 @@ import Backdrop from '@material-ui/core/Backdrop'
 import Fade from '@material-ui/core/Fade'
 import Button from '@material-ui/core/Button'
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart'
+import CancelPresentationIcon from '@material-ui/icons/CancelPresentation';
 
 const useStyles = makeStyles((theme) => ({
     modalStyle: {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
+    },
+    close: {
+        cursor: 'pointer',
+        position: 'fixed',
+        top: 0,
+        right: 0,
+        zIndex: 10,
     },
     topBar: {
         position: 'fixed',
@@ -24,9 +32,18 @@ const useStyles = makeStyles((theme) => ({
         display: 'flex',
         justifyContent: 'space-around',
         alignItems: 'center',
+        [theme.breakpoints.down('sm')]: {
+            flexFlow: 'column',
+            height: 140,
+        }
     },
     naslov: {
         fontSize: '24px'
+    },
+    detaljiProizvoda: {
+        [theme.breakpoints.down('sm')]: {
+            display: 'none'
+        }
     },
     cena: {
         fontSize: '20px',
@@ -39,6 +56,10 @@ const useStyles = makeStyles((theme) => ({
         width: 800,
         height: 600,
         background: 'white',
+        [theme.breakpoints.down('sm')]: {
+            width: '120%',
+            height: 'auto',
+        }
     },
     dl: {
         fontSize: '14px',
@@ -62,13 +83,28 @@ const useStyles = makeStyles((theme) => ({
 
 export default function LightBox(props) {
     const classes = useStyles()
+    const onClose = props.onClose
+
+    const escFunction = useCallback((event) => {
+        if(event.keyCode === 27) {
+            onClose()
+        }
+      }, [onClose])
+
+    useEffect(() => {
+        document.addEventListener("keydown", escFunction, false)
+    
+        return () => {
+          document.removeEventListener("keydown", escFunction, false)
+        };
+      }, [escFunction])
 
     return (
 
         <Modal
             className={classes.modalStyle}
             open={props.open}
-            onClose={props.onClose}
+            onClose={onClose}
             BackdropComponent={Backdrop}
             BackdropProps={{
                 timeout: 500,
@@ -78,27 +114,29 @@ export default function LightBox(props) {
             <Fade in={props.open}>
 
                 <React.Fragment>
+                    <CancelPresentationIcon className={classes.close} onClick={onClose} />
+
                     <header className={classes.topBar}>
 
                         <section className={classes.naslov}>
-                            {props.naslov}
+                            {props.product.naslov}
                         </section>
 
-                        <section>
+                        <section className={classes.detaljiProizvoda}>
                             <dl className={classes.dl}>
                                 <dt className={classes.dt}>Opis pakovanja:</dt>
-                                <dd className={classes.dd}>{props.opisPakovanja}</dd>
+                                <dd className={classes.dd}>{props.product.opisPakovanja}</dd>
 
                                 <dt className={classes.dt}>Trans. pakovanje:</dt>
-                                <dd className={classes.dd}>{props.transportnoPakovanje}</dd>
+                                <dd className={classes.dd}>{props.product.transportnoPakovanje}</dd>
 
                                 <dt className={classes.dt}>Min. pakovanje:</dt>
-                                <dd className={classes.dd}>{props.minPakovanje}</dd>
+                                <dd className={classes.dd}>{props.product.minPakovanje}</dd>
                             </dl>
                         </section>
 
                         <section className={classes.cena}>
-                            {props.cena}
+                            {props.product.cena}
                         </section>
 
                         <section>
@@ -114,7 +152,7 @@ export default function LightBox(props) {
 
                     </header>
 
-                    <img src="/img/vece/15000.jpg" className={classes.imageStyle} />
+                    <img src={props.product.vecaSlika} className={classes.imageStyle} alt="product"/>
                 </React.Fragment>
 
             </Fade>
