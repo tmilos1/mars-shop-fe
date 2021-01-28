@@ -12,7 +12,7 @@ import LightBox from '../LightBox'
 
 const useStyles = makeStyles((theme) => ({
     root: {
-      maxWidth: 345,
+
     },
     media: {
         height: 0,
@@ -53,6 +53,7 @@ export default function ProductCard(props) {
     const classes = useStyles()
 
     const [open, setOpen] = useState(false)
+    const [elevation, setElevation] = useState(1)
 
     const handleOpen = () => {
         setOpen(true)
@@ -65,7 +66,12 @@ export default function ProductCard(props) {
     const sifraArtiklaText = `Šifra: ${props.product.sifra}`
 
     return (
-        <Card className={classes.root}>
+        <Card 
+            className={classes.root}
+            elevation={elevation}
+            onMouseEnter={() => setElevation(5)}
+            onMouseLeave={() => setElevation(1)}
+        >
             <CardHeader
                 title={props.product.naslov}
                 subheader={sifraArtiklaText}

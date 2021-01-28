@@ -32,7 +32,7 @@ const useStyles = makeStyles((theme) => ({
         display: 'flex',
         justifyContent: 'space-around',
         alignItems: 'center',
-        [theme.breakpoints.down('sm')]: {
+        [theme.breakpoints.down('xs')]: {
             flexFlow: 'column',
             height: 140,
         }
@@ -41,7 +41,7 @@ const useStyles = makeStyles((theme) => ({
         fontSize: '24px'
     },
     detaljiProizvoda: {
-        [theme.breakpoints.down('sm')]: {
+        [theme.breakpoints.down('xs')]: {
             display: 'none'
         }
     },
@@ -56,7 +56,7 @@ const useStyles = makeStyles((theme) => ({
         width: 800,
         height: 600,
         background: 'white',
-        [theme.breakpoints.down('sm')]: {
+        [theme.breakpoints.down('xs')]: {
             width: '120%',
             height: 'auto',
         }
