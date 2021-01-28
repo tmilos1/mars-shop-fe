@@ -36,7 +36,7 @@ const useStyles = makeStyles((theme) => ({
         fontWeight: 'bold',
         fontFamily: 'Roboto, sans-serif'
     },
-    price: {
+    cena: {
         fontSize: '20px',
         lineHeight: '20px',
         letterSpacing: '1px',
@@ -81,7 +81,7 @@ export default function ProductCard(props) {
             <CardContent>
                 <dl className={classes.dl}>
                     <dt className={classes.dt}>Cena:</dt>
-                    <dd className={classes.dd} style={{marginBottom: '10px'}}><span class={classes.price}>{props.cena}</span></dd>
+                    <dd className={classes.dd} style={{marginBottom: '10px'}}><span class={classes.cena}>{props.cena}</span></dd>
 
                     <dt className={classes.dt}>Opis pakovanja:</dt>
                     <dd className={classes.dd}>{props.opisPakovanja}</dd>
@@ -107,6 +107,11 @@ export default function ProductCard(props) {
             <LightBox
                 open={open}
                 onClose={handleClose}
+                naslov={props.naslov}
+                cena={props.cena}
+                opisPakovanja={props.opisPakovanja}
+                transportnoPakovanje={props.transportnoPakovanje}
+                minPakovanje={props.minPakovanje}
             />
         </Card>
     )
