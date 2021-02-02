@@ -46,6 +46,7 @@ const useStyles = makeStyles((theme) => ({
     buttons: {
         display: 'flex',
         justifyContent: 'center',
+        marginBottom: '10px',
     }
 }))
 
@@ -57,6 +58,7 @@ export default function ProductCard(props) {
 
     const handleOpen = () => {
         setOpen(true)
+        setElevation(1)
     }
 
     const handleClose = () => {
@@ -103,7 +105,7 @@ export default function ProductCard(props) {
             <CardActions className={classes.buttons}>
                 <Button
                     variant="contained"
-                    color="primary"
+                    // color="primary"
                     startIcon={<ShoppingCartIcon />}
                 >
                     Dodaj u korpu

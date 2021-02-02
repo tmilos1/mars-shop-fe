@@ -1,8 +1,10 @@
+import { useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 
 import Container from '@material-ui/core/Container'
 import Grid from '@material-ui/core/Grid'
 import Box from '@material-ui/core/Box'
+import Paper from '@material-ui/core/Paper'
 import Pagination from '@material-ui/lab/Pagination'
 
 // Levi meni
@@ -18,6 +20,13 @@ import Typography from '@material-ui/core/Typography'
 import Button from '@material-ui/core/Button'
 import IconButton from '@material-ui/core/IconButton'
 import MenuIcon from '@material-ui/icons/Menu'
+
+// Products top
+import InputLabel from '@material-ui/core/InputLabel'
+import MenuItem from '@material-ui/core/MenuItem'
+import FormHelperText from '@material-ui/core/FormHelperText'
+import FormControl from '@material-ui/core/FormControl'
+import Select from '@material-ui/core/Select'
 
 import ProductCard from './components/ProductCard'
 
@@ -36,6 +45,10 @@ const useStyles = makeStyles((theme) => ({
         flexGrow: 1,
         maxWidth: 400,
     },    
+    formControl: {
+        margin: theme.spacing(1),
+        minWidth: 130,
+    },    
     zaglavlje: {
         // border: "1px solid yellow",
         height: "100px",
@@ -45,7 +58,7 @@ const useStyles = makeStyles((theme) => ({
 
     leviMeni: {
         // border: "1px solid yellow",
-        height: "1000px",
+        // height: "1000px",
         padding: "10px",
         fontFamily: "Helvetica",
     }
@@ -64,6 +77,12 @@ function App() {
         transportnoPakovanje: "40 kom",
         minPakovanje: "1 kom",        
     }
+
+    const [redosled, setRedosled] = useState('Naziv')
+
+    const handleChangeRedosled = (event) => {
+        setRedosled(event.target.value);
+    }    
 
     return (
         <div className="App">
@@ -85,9 +104,11 @@ function App() {
                                     </Toolbar>
                                 </AppBar>
                             </Box>
-                        </Grid>                    
+                        </Grid>       
 
-                        <Grid xs={2} item>            
+
+
+                        <Grid sm={12} md={2} item>            
                             <Box className={classes.leviMeni}>
 
                             <TreeView
@@ -114,6 +135,25 @@ function App() {
                         </Grid>
 
                         <Grid xs={10} item> 
+                            <Box mb={3} >
+
+                                <FormControl variant="outlined" className={classes.formControl}>
+                                    <InputLabel id="demo-simple-select-outlined-label">Redosled</InputLabel>
+                                    <Select
+                                    labelId="demo-simple-select-outlined-label"
+                                    id="demo-simple-select-outlined"
+                                    value={redosled}
+                                    onChange={handleChangeRedosled}
+                                    label="Redosled"
+                                    >
+                                        <MenuItem value="Naziv">Naziv</MenuItem>
+                                        <MenuItem value="Cena">Cena</MenuItem>
+                                        <MenuItem value="Najnovije">Najnovije</MenuItem>
+                                    </Select>
+                                </FormControl>                                
+
+                            </Box>                 
+
                             <Grid container spacing={3} >
                                 <Grid xs={12} sm={6} md={6} lg={4} item>            
                                     <ProductCard product={product} />

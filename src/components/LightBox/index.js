@@ -142,7 +142,7 @@ export default function LightBox(props) {
                         <section>
                             <Button
                                 variant="contained"
-                                color="primary"
+                                // color="primary"
                                 className={classes.button}
                                 startIcon={<ShoppingCartIcon />}
                             >
