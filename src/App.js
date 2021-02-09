@@ -7,23 +7,34 @@ import Pagination from '@material-ui/lab/Pagination'
 
 import AppMenu from './components/AppMenu'
 import CategoryMenu from './components/CategoryMenu'
-import ProductCard from './components/ProductCard'
 
 import ProductSortSelect from './components/ProductSortSelect'
+import ProductList from './containers/ProductList'
 
 function App() {
 
-    const product = {
-        naslov: "KALUP ZA KOLAČE",
-        sifra: "24523",
-        manjaSlika: "/img/manje/15000.jpg",
-        vecaSlika: "/img/vece/15000.jpg",
-        cena: "24,99 RSD",
-        opisPakovanja: "39,5x28x3,5cm",
-        transportnoPakovanje: "40 kom",
-        minPakovanje: "1 kom",        
-    }
-
+    const products = [
+        {
+            naslov: "KALUP ZA KOLAČE",
+            sifra: "24523",
+            manjaSlika: "/img/manje/15000.jpg",
+            vecaSlika: "/img/vece/15000.jpg",
+            cena: "24,99 RSD",
+            opisPakovanja: "39,5x28x3,5cm",
+            transportnoPakovanje: "40 kom",
+            minPakovanje: "1 kom",        
+        },
+        {
+            naslov: "KALUP ZA KOLAČE",
+            sifra: "24523",
+            manjaSlika: "/img/manje/15000.jpg",
+            vecaSlika: "/img/vece/15000.jpg",
+            cena: "24,99 RSD",
+            opisPakovanja: "39,5x28x3,5cm",
+            transportnoPakovanje: "40 kom",
+            minPakovanje: "1 kom",        
+        },
+    ]
     const [redosled, setRedosled] = useState('Naziv')
 
     const handleChangeRedosled = (event) => {
@@ -47,51 +58,7 @@ function App() {
                         <Grid xs={10} item> 
                             <ProductSortSelect onChange={handleChangeRedosled} value={redosled} />
 
-                            <Grid container spacing={3} >
-                                <Grid xs={12} sm={6} md={6} lg={4} item>            
-                                    <ProductCard product={product} />
-                                </Grid>
-                                <Grid xs={12} sm={6} md={6} lg={4} item>            
-                                    <ProductCard product={product} />
-                                </Grid>
-                                <Grid xs={12} sm={6} md={6} lg={4} item>            
-                                    <ProductCard product={product} />
-                                </Grid>
-                                <Grid xs={12} sm={6} md={6} lg={4} item>            
-                                    <ProductCard product={product} />
-                                </Grid>
-                                <Grid xs={12} sm={6} md={6} lg={4} item>            
-                                    <ProductCard product={product} />
-                                </Grid>
-                                <Grid xs={12} sm={6} md={6} lg={4} item>            
-                                    <ProductCard product={product} />
-                                </Grid>
-                                <Grid xs={12} sm={6} md={6} lg={4} item>            
-                                    <ProductCard product={product} />
-                                </Grid>
-                                <Grid xs={12} sm={6} md={6} lg={4} item>            
-                                    <ProductCard product={product} />
-                                </Grid>
-                                <Grid xs={12} sm={6} md={6} lg={4} item>            
-                                    <ProductCard product={product} />
-                                </Grid>
-                                <Grid xs={12} sm={6} md={6} lg={4} item>            
-                                    <ProductCard product={product} />
-                                </Grid>
-                                <Grid xs={12} sm={6} md={6} lg={4} item>            
-                                    <ProductCard product={product} />
-                                </Grid>
-                                <Grid xs={12} sm={6} md={6} lg={4} item>            
-                                    <ProductCard product={product} />
-                                </Grid>
-                                <Grid xs={12} sm={6} md={6} lg={4} item>            
-                                    <ProductCard product={product} />
-                                </Grid>
-                                <Grid xs={12} sm={6} md={6} lg={4} item>            
-                                    <ProductCard product={product} />
-                                </Grid>
-
-                            </Grid>
+                            <ProductList products={products} />
                         </Grid>
 
                         <Grid xs={2} item>            
@@ -102,10 +69,7 @@ function App() {
                             <Pagination count={10} />
                         </Grid>  
 
-
                     </Grid>
-
-
                 </Box>
             </Container>
         </div>
