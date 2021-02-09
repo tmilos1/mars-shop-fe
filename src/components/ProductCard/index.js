@@ -11,9 +11,6 @@ import ShoppingCartIcon from '@material-ui/icons/ShoppingCart'
 import LightBox from '../LightBox'
 
 const useStyles = makeStyles((theme) => ({
-    root: {
-
-    },
     media: {
         height: 0,
         paddingTop: '56.25%', // 16:9
@@ -65,7 +62,7 @@ export default function ProductCard(props) {
         setOpen(false)
     }
 
-    const sifraArtiklaText = `Šifra: ${props.product.sifra}`
+    const sifraArtiklaText = `Šifra: ${props.product.productId}`
 
     return (
         <Card 
@@ -81,7 +78,7 @@ export default function ProductCard(props) {
             
             <CardMedia
                 className={classes.media}
-                image={props.product.vecaSlika}
+                image={process.env.REACT_APP_API_ROOT + "/slike/proizvodi/vece/" + props.product.productId + ".jpg"}
                 onClick={handleOpen}
                 style={{cursor: 'pointer'}}
             />        
@@ -95,7 +92,7 @@ export default function ProductCard(props) {
                     <dd className={classes.dd}>{props.product.opisPakovanja}</dd>
 
                     <dt className={classes.dt}>Trans. pakovanje:</dt>
-                    <dd className={classes.dd}>{props.product.transportnoPakovanje}</dd>
+                    <dd className={classes.dd}>{props.product.transPakovanje}</dd>
 
                     <dt className={classes.dt}>Min. pakovanje:</dt>
                     <dd className={classes.dd}>{props.product.minPakovanje}</dd>

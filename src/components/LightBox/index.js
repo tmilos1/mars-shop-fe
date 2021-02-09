@@ -142,7 +142,6 @@ export default function LightBox(props) {
                         <section>
                             <Button
                                 variant="contained"
-                                // color="primary"
                                 className={classes.button}
                                 startIcon={<ShoppingCartIcon />}
                             >
@@ -152,7 +151,10 @@ export default function LightBox(props) {
 
                     </header>
 
-                    <img src={props.product.vecaSlika} className={classes.imageStyle} alt="product"/>
+                    <img src={process.env.REACT_APP_API_ROOT + "/slike/proizvodi/vece/" + props.product.productId + ".jpg"}
+                        className={classes.imageStyle}
+                        alt="product"
+                    />
                 </React.Fragment>
 
             </Fade>
