@@ -37,7 +37,7 @@ const useStyles = makeStyles((theme) => ({
             height: 140,
         }
     },
-    naslov: {
+    naziv: {
         fontSize: '24px'
     },
     detaljiProizvoda: {
@@ -118,8 +118,8 @@ export default function LightBox(props) {
 
                     <header className={classes.topBar}>
 
-                        <section className={classes.naslov}>
-                            {props.product.naslov}
+                        <section className={classes.naziv}>
+                            {props.product.naziv}
                         </section>
 
                         <section className={classes.detaljiProizvoda}>

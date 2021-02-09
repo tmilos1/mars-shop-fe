@@ -72,7 +72,7 @@ export default function ProductCard(props) {
             onMouseLeave={() => setElevation(1)}
         >
             <CardHeader
-                title={props.product.naslov}
+                title={props.product.naziv}
                 subheader={sifraArtiklaText}
             />
             
@@ -86,7 +86,7 @@ export default function ProductCard(props) {
             <CardContent>
                 <dl className={classes.dl}>
                     <dt className={classes.dt}>Cena:</dt>
-                    <dd className={classes.dd} style={{marginBottom: '10px'}}><span class={classes.cena}>{props.product.cena}</span></dd>
+                    <dd className={classes.dd} style={{marginBottom: '10px'}}><span className={classes.cena}>{props.product.cena}</span></dd>
 
                     <dt className={classes.dt}>Opis pakovanja:</dt>
                     <dd className={classes.dd}>{props.product.opisPakovanja}</dd>

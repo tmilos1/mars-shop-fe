@@ -13,28 +13,33 @@ import ProductList from './containers/ProductList'
 
 import {
     useQuery,
-    useMutation,
-    useQueryClient,
 } from 'react-query'
 
 
 function App() {
 
     const [redosled, setRedosled] = useState('Naziv')
+    const [page, setPage] = useState(1)
+    const [size, setSize] = useState(20)
 
     const handleChangeRedosled = (event) => {
         setRedosled(event.target.value);
     }
 
-    const { isLoading, data: products, error, isFetching } = useQuery("productsData", () =>
-        fetch(
-            process.env.REACT_APP_API_ROOT + "/products?size=20&page=1"
-        ).then((res) => res.json())
-    );
+    const handlePageChange = (event, newPage) => {
+        setPage(newPage)
+        window.scrollTo(0, 0)
+        window.history.pushState({page: newPage}, "Strana " + newPage, "?page=" + newPage)
+    }
 
-    if (isLoading) return "Loading...";
+    const fetchProducts = (page = 1, size = 20) => fetch(
+        process.env.REACT_APP_API_ROOT + "/products?size=" + size + "&page=" + page
+    ).then((res) => res.json())
 
-    if (error) return "An error has occurred: " + error.message;
+    const { isLoading, data: products, error, isSuccess } = useQuery(["productsData", page], () =>
+        fetchProducts(page, size), { keepPreviousData: true })
+
+    if (error) return "An error has occurred: " + error.message
 
     return (
         <div className="App">
@@ -53,7 +58,7 @@ function App() {
                         <Grid xs={10} item>
                             <ProductSortSelect onChange={handleChangeRedosled} value={redosled} />
 
-                            <ProductList products={products.content} />
+                            <ProductList products={products} isLoading={isLoading} />
                         </Grid>
 
                         <Grid xs={2} item>
@@ -61,7 +66,15 @@ function App() {
                         </Grid>
 
                         <Grid xs={10} item>
-                            <Pagination count={10} />
+                            {isSuccess &&
+                                <Pagination
+                                    count={products.pageSection.totalPages}
+                                    page={page}
+                                    onChange={handlePageChange}
+                                    boundaryCount={3}
+                                    siblingCount={2}
+                                />
+                            }
                         </Grid>
 
                     </Grid>
