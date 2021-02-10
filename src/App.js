@@ -9,12 +9,10 @@ import AppMenu from './components/AppMenu'
 import CategoryMenu from './components/CategoryMenu'
 
 import ProductSortSelect from './components/ProductSortSelect'
+import ProductPerPageSelect from './components/ProductPerPageSelect'
 import ProductList from './containers/ProductList'
 
-import {
-    useQuery,
-} from 'react-query'
-
+import { useQuery } from 'react-query'
 
 function App() {
 
@@ -23,21 +21,31 @@ function App() {
     const [size, setSize] = useState(20)
 
     const handleChangeRedosled = (event) => {
-        setRedosled(event.target.value);
+        setRedosled(event.target.value)
+        setPage(1)
+    }
+
+    const handleChangeSize = (event) => {
+        setSize(event.target.value)
+        setPage(1)
     }
 
     const handlePageChange = (event, newPage) => {
         setPage(newPage)
         window.scrollTo(0, 0)
-        window.history.pushState({page: newPage}, "Strana " + newPage, "?page=" + newPage)
+        window.history.pushState({ page: newPage }, "Strana " + newPage, "?page=" + newPage)
     }
 
     const fetchProducts = (page = 1, size = 20) => fetch(
-        process.env.REACT_APP_API_ROOT + "/products?size=" + size + "&page=" + page
+        process.env.REACT_APP_API_ROOT
+        + "/products?size=" + size
+        + "&page=" + page
+        + "&order=" + redosled
     ).then((res) => res.json())
 
-    const { isLoading, data: products, error, isSuccess } = useQuery(["productsData", page], () =>
-        fetchProducts(page, size), { keepPreviousData: true })
+    const { isLoading, data: products, error, isSuccess }
+        = useQuery(["productsData", page, redosled, size], () =>
+            fetchProducts(page, size), { keepPreviousData: true })
 
     if (error) return "An error has occurred: " + error.message
 
@@ -56,7 +64,14 @@ function App() {
                         </Grid>
 
                         <Grid xs={10} item>
-                            <ProductSortSelect onChange={handleChangeRedosled} value={redosled} />
+                            <Grid container justify="space-between">
+                                <Grid md={2} item>
+                                    <ProductSortSelect onChange={handleChangeRedosled} value={redosled} />
+                                </Grid>
+                                <Grid md={2} item>
+                                    <ProductPerPageSelect onChange={handleChangeSize} value={size} />
+                                </Grid>
+                            </Grid>
 
                             <ProductList products={products} isLoading={isLoading} />
                         </Grid>
