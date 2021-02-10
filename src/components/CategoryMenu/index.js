@@ -1,6 +1,5 @@
 import { makeStyles } from '@material-ui/core/styles'
 
-import Box from '@material-ui/core/Box'
 import TreeView from '@material-ui/lab/TreeView'
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
 import ChevronRightIcon from '@material-ui/icons/ChevronRight'
@@ -10,12 +9,11 @@ import { useQuery } from 'react-query'
 
 const useStyles = makeStyles((theme) => ({
     root: {
-        height: 240,
         flexGrow: 1,
         maxWidth: 400,
     },
-    leviMeni: {
-        padding: "10px",
+    treeItemLabel: {
+        fontSize: "12px",
         fontFamily: "Helvetica",
     }
 }))
@@ -28,27 +26,40 @@ export default function CategoryMenu(props) {
         + "/categories"
     ).then((res) => res.json())
 
-    const { isLoading, data: categories, error, isSuccess }
+    const { data: categories, isSuccess }
         = useQuery("categoriesData", () =>
-            fetchCategories())    
+            fetchCategories())
+
+
+    const wrapCategories = (catCode) => {
+        const topCategory = categories.filter(cat => cat.id === catCode).pop()
+
+        return {
+            id: topCategory.id,
+            name: topCategory.name,
+            children: topCategory.children
+        }
+    }
 
     const renderTree = (nodes) => (
-        <TreeItem key={nodes.id} nodeId={nodes.id} label={nodes.name}>
+        <TreeItem key={nodes.id} nodeId={nodes.id} label={nodes.name} classes={{label: classes.treeItemLabel}} >
             {Array.isArray(nodes.children) ? nodes.children.map((node) => renderTree(node)) : null}
         </TreeItem>
     )
 
     return (
-        <Box className={classes.leviMeni}>
-            <TreeView
-                className={classes.root}
-                defaultCollapseIcon={<ExpandMoreIcon />}
-                defaultExpanded={['root']}
-                defaultExpandIcon={<ChevronRightIcon />}
-            >   {isSuccess &&
-                    renderTree(categories)
-                }
-            </TreeView>
-        </Box>
+        <TreeView
+            className={classes.root}
+            defaultCollapseIcon={<ExpandMoreIcon />}
+            defaultExpanded={['IGR', 'DOM']}
+            defaultExpandIcon={<ChevronRightIcon />}
+        >   {isSuccess && (
+                    <>
+                        {renderTree(wrapCategories('IGR'))}
+                        {renderTree(wrapCategories('DOM'))}
+                    </>
+                )
+            }
+        </TreeView>
     )
 }
