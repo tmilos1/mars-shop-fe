@@ -6,46 +6,49 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
 import ChevronRightIcon from '@material-ui/icons/ChevronRight'
 import TreeItem from '@material-ui/lab/TreeItem'
 
+import { useQuery } from 'react-query'
+
 const useStyles = makeStyles((theme) => ({
-    meniKategorija: {
+    root: {
         height: 240,
         flexGrow: 1,
         maxWidth: 400,
-    },    
+    },
     leviMeni: {
-        // border: "1px solid yellow",
-        // height: "1000px",
         padding: "10px",
         fontFamily: "Helvetica",
-    }    
+    }
 }))
 
 export default function CategoryMenu(props) {
     const classes = useStyles()
 
+    const fetchCategories = () => fetch(
+        process.env.REACT_APP_API_ROOT
+        + "/categories"
+    ).then((res) => res.json())
+
+    const { isLoading, data: categories, error, isSuccess }
+        = useQuery("categoriesData", () =>
+            fetchCategories())    
+
+    const renderTree = (nodes) => (
+        <TreeItem key={nodes.id} nodeId={nodes.id} label={nodes.name}>
+            {Array.isArray(nodes.children) ? nodes.children.map((node) => renderTree(node)) : null}
+        </TreeItem>
+    )
+
     return (
         <Box className={classes.leviMeni}>
-
             <TreeView
-                className={classes.meniKategorija}
+                className={classes.root}
                 defaultCollapseIcon={<ExpandMoreIcon />}
+                defaultExpanded={['root']}
                 defaultExpandIcon={<ChevronRightIcon />}
-                >
-                <TreeItem nodeId="1" label="Applications">
-                    <TreeItem nodeId="2" label="Calendar" />
-                    <TreeItem nodeId="3" label="Chrome" />
-                    <TreeItem nodeId="4" label="Webstorm" />
-                </TreeItem>
-                <TreeItem nodeId="5" label="Documents">
-                    <TreeItem nodeId="10" label="OSS" />
-                    <TreeItem nodeId="6" label="Material-UI">
-                    <TreeItem nodeId="7" label="src">
-                        <TreeItem nodeId="8" label="index.js" />
-                        <TreeItem nodeId="9" label="tree-view.js" />
-                    </TreeItem>
-                    </TreeItem>
-                </TreeItem>
-            </TreeView>                                
-        </Box>        
+            >   {isSuccess &&
+                    renderTree(categories)
+                }
+            </TreeView>
+        </Box>
     )
 }
