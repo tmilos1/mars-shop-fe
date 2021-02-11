@@ -19,6 +19,7 @@ function App() {
     const [redosled, setRedosled] = useState('Naziv')
     const [page, setPage] = useState(1)
     const [size, setSize] = useState(20)
+    const [category, setCategory] = useState('')
 
     const handleChangeRedosled = (event) => {
         setRedosled(event.target.value)
@@ -36,15 +37,22 @@ function App() {
         window.history.pushState({ page: newPage }, "Strana " + newPage, "?page=" + newPage)
     }
 
+    const handleCategoryChange = (event, value) => {
+        setCategory(value)
+        setPage(1)
+        window.scrollTo(0, 0)
+    }
+
     const fetchProducts = (page = 1, size = 20) => fetch(
         process.env.REACT_APP_API_ROOT
         + "/products?size=" + size
         + "&page=" + page
+        + "&category=" + category
         + "&order=" + redosled
     ).then((res) => res.json())
 
     const { isLoading, data: products, error, isSuccess }
-        = useQuery(["productsData", page, redosled, size], () =>
+        = useQuery(["productsData", size, page, category, redosled ], () =>
             fetchProducts(page, size), { keepPreviousData: true })
 
     if (error) return "An error has occurred: " + error.message
@@ -60,7 +68,7 @@ function App() {
                         </Grid>
 
                         <Grid sm={12} md={2} item>
-                            <CategoryMenu />
+                            <CategoryMenu onCategoryChange={handleCategoryChange} />
                         </Grid>
 
                         <Grid xs={10} item>
