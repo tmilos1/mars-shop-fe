@@ -7,9 +7,12 @@ import Pagination from '@material-ui/lab/Pagination'
 
 import AppMenu from './components/AppMenu'
 import CategoryMenu from './components/CategoryMenu'
+import FilterMenu from './components/FilterMenu'
 
 import ProductSortSelect from './components/ProductSortSelect'
 import ProductPerPageSelect from './components/ProductPerPageSelect'
+import SearchField from './components/SearchField'
+import SearchByProductIdsField from './components/SearchByProductIdsField'
 import ProductList from './containers/ProductList'
 
 import { useQuery } from 'react-query'
@@ -52,7 +55,7 @@ function App() {
     ).then((res) => res.json())
 
     const { isLoading, data: products, error, isSuccess }
-        = useQuery(["productsData", size, page, category, redosled ], () =>
+        = useQuery(["productsData", size, page, category, redosled], () =>
             fetchProducts(page, size), { keepPreviousData: true })
 
     if (error) return "An error has occurred: " + error.message
@@ -69,12 +72,17 @@ function App() {
 
                         <Grid sm={12} md={2} item>
                             <CategoryMenu onCategoryChange={handleCategoryChange} />
+                            <FilterMenu />
+                            <SearchByProductIdsField />
                         </Grid>
 
                         <Grid xs={10} item>
                             <Grid container justify="space-between">
                                 <Grid md={2} item>
                                     <ProductSortSelect onChange={handleChangeRedosled} value={redosled} />
+                                </Grid>
+                                <Grid md={8} item>
+                                    <SearchField />
                                 </Grid>
                                 <Grid md={2} item>
                                     <ProductPerPageSelect onChange={handleChangeSize} value={size} />
