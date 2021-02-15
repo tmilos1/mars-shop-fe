@@ -8,7 +8,7 @@ const useStyles = makeStyles((theme) => ({
         margin: theme.spacing(1),
     },   
     searchField: {
-        width: "100%"
+        width: "95%"
     }
 }))
 

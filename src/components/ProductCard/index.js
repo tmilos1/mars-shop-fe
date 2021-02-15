@@ -7,10 +7,14 @@ import CardContent from '@material-ui/core/CardContent'
 import CardActions from '@material-ui/core/CardActions'
 import Button from '@material-ui/core/Button'
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart'
+import Slide from '@material-ui/core/Slide'
 
 import LightBox from '../LightBox'
 
 const useStyles = makeStyles((theme) => ({
+    title: {
+        background: theme.palette.action.selected,
+    },
     media: {
         height: 0,
         paddingTop: '56.25%', // 16:9
@@ -24,6 +28,7 @@ const useStyles = makeStyles((theme) => ({
         padding: '2px 4px',
         flexBasis: '45%',
         textAlign: 'right',
+        fontFamily: 'Roboto, sans-serif'
     },
     dd: {
         flexBasis: '40%',
@@ -51,11 +56,11 @@ export default function ProductCard(props) {
     const classes = useStyles()
 
     const [open, setOpen] = useState(false)
-    const [elevation, setElevation] = useState(1)
+    const [elevation, setElevation] = useState(3)
 
     const handleOpen = () => {
         setOpen(true)
-        setElevation(1)
+        setElevation(3)
     }
 
     const handleClose = () => {
@@ -65,55 +70,59 @@ export default function ProductCard(props) {
     const sifraArtiklaText = `Šifra: ${props.product.productId}`
 
     return (
-        <Card 
-            className={classes.root}
-            elevation={elevation}
-            onMouseEnter={() => setElevation(5)}
-            onMouseLeave={() => setElevation(1)}
-        >
-            <CardHeader
-                title={props.product.naziv}
-                subheader={sifraArtiklaText}
-            />
-            
-            <CardMedia
-                className={classes.media}
-                image={process.env.REACT_APP_API_ROOT + "/slike/proizvodi/vece/" + props.product.productId + ".jpg"}
-                onClick={handleOpen}
-                style={{cursor: 'pointer'}}
-            />        
+        <Slide direction="up" in={true} timeout={200}>
+            <Card 
+                className={classes.root}
+                elevation={elevation}
+                onMouseEnter={() => setElevation(6)}
+                onMouseLeave={() => setElevation(3)}
+            >
+                <CardHeader
+                    title={props.product.naziv}
+                    subheader={sifraArtiklaText}
+                    className={classes.header}
+                    classes={{title: classes.title}}
+                />
+                
+                <CardMedia
+                    className={classes.media}
+                    image={process.env.REACT_APP_API_ROOT + "/slike/proizvodi/vece/" + props.product.productId + ".jpg"}
+                    onClick={handleOpen}
+                    style={{cursor: 'pointer'}}
+                />        
 
-            <CardContent>
-                <dl className={classes.dl}>
-                    <dt className={classes.dt}>Cena:</dt>
-                    <dd className={classes.dd} style={{marginBottom: '10px'}}><span className={classes.cena}>{props.product.cena}</span></dd>
+                <CardContent>
+                    <dl className={classes.dl}>
+                        <dt className={classes.dt}>Cena:</dt>
+                        <dd className={classes.dd} style={{marginBottom: '10px'}}><span className={classes.cena}>{props.product.cena}</span></dd>
 
-                    <dt className={classes.dt}>Opis pakovanja:</dt>
-                    <dd className={classes.dd}>{props.product.opisPakovanja}</dd>
+                        <dt className={classes.dt}>Opis pakovanja:</dt>
+                        <dd className={classes.dd}>{props.product.opisPakovanja}</dd>
 
-                    <dt className={classes.dt}>Trans. pakovanje:</dt>
-                    <dd className={classes.dd}>{props.product.transPakovanje}</dd>
+                        <dt className={classes.dt}>Trans. pakovanje:</dt>
+                        <dd className={classes.dd}>{props.product.transPakovanje}</dd>
 
-                    <dt className={classes.dt}>Min. pakovanje:</dt>
-                    <dd className={classes.dd}>{props.product.minPakovanje}</dd>
-                </dl>       
-            </CardContent>
+                        <dt className={classes.dt}>Min. pakovanje:</dt>
+                        <dd className={classes.dd}>{props.product.minPakovanje}</dd>
+                    </dl>       
+                </CardContent>
 
-            <CardActions className={classes.buttons}>
-                <Button
-                    variant="contained"
-                    // color="primary"
-                    startIcon={<ShoppingCartIcon />}
-                >
-                    Dodaj u korpu
-                </Button>
-            </CardActions>
+                <CardActions className={classes.buttons}>
+                    <Button
+                        variant="outlined"
+                        color="primary"
+                        startIcon={<ShoppingCartIcon />}
+                    >
+                        Dodaj u korpu
+                    </Button>
+                </CardActions>
 
-            <LightBox
-                open={open}
-                onClose={handleClose}
-                product={props.product}
-            />
-        </Card>
+                <LightBox
+                    open={open}
+                    onClose={handleClose}
+                    product={props.product}
+                />
+            </Card>
+        </Slide>
     )
 }

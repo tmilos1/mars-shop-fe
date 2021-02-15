@@ -13,6 +13,7 @@ import ProductSortSelect from './components/ProductSortSelect'
 import ProductPerPageSelect from './components/ProductPerPageSelect'
 import SearchField from './components/SearchField'
 import SearchByProductIdsField from './components/SearchByProductIdsField'
+import ShoppingBasketButton from './components/ShoppingBasketButton'
 import ProductList from './containers/ProductList'
 
 import { useQuery } from 'react-query'
@@ -21,7 +22,7 @@ function App() {
 
     const [redosled, setRedosled] = useState('Naziv')
     const [page, setPage] = useState(1)
-    const [size, setSize] = useState(20)
+    const [size, setSize] = useState(9)
     const [category, setCategory] = useState('')
 
     const handleChangeRedosled = (event) => {
@@ -67,7 +68,7 @@ function App() {
                     <Grid container spacing={2} >
 
                         <Grid xs={12} item>
-                            <AppMenu />
+                            {/* <AppMenu /> */}
                         </Grid>
 
                         <Grid sm={12} md={2} item>
@@ -81,11 +82,14 @@ function App() {
                                 <Grid md={2} item>
                                     <ProductSortSelect onChange={handleChangeRedosled} value={redosled} />
                                 </Grid>
-                                <Grid md={8} item>
+                                <Grid md={7} item>
                                     <SearchField />
                                 </Grid>
                                 <Grid md={2} item>
                                     <ProductPerPageSelect onChange={handleChangeSize} value={size} />
+                                </Grid>
+                                <Grid md={1} item>
+                                    <ShoppingBasketButton />
                                 </Grid>
                             </Grid>
 
@@ -98,13 +102,15 @@ function App() {
 
                         <Grid xs={10} item>
                             {isSuccess &&
-                                <Pagination
-                                    count={products.pageSection.totalPages}
-                                    page={page}
-                                    onChange={handlePageChange}
-                                    boundaryCount={3}
-                                    siblingCount={2}
-                                />
+                                <div style={{display: 'flex', justifyContent: 'center'}}>
+                                    <Pagination
+                                        count={products.pageSection.totalPages}
+                                        page={page}
+                                        onChange={handlePageChange}
+                                        boundaryCount={3}
+                                        siblingCount={2}
+                                    />
+                                </div>
                             }
                         </Grid>
 

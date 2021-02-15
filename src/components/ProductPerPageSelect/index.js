@@ -29,9 +29,9 @@ export default function ProductPerPageSelect(props) {
                     onChange={props.onChange}
                     label="Prikaz po strani"
                 >
-                    <MenuItem value="10">10</MenuItem>
-                    <MenuItem value="20">20</MenuItem>
-                    <MenuItem value="50">50</MenuItem>
+                    <MenuItem value="9">9</MenuItem>
+                    <MenuItem value="27">27</MenuItem>
+                    <MenuItem value="54">54</MenuItem>
                 </Select>
             </FormControl>
 

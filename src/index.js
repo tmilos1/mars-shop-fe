@@ -2,6 +2,8 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import './index.css'
 import App from './App'
+import theme from './Theme'
+import { ThemeProvider } from '@material-ui/core/styles'
 
 import { ReactQueryDevtools } from 'react-query/devtools'
 
@@ -13,9 +15,13 @@ import {
 const queryClient = new QueryClient()
 
 ReactDOM.render(
-    <QueryClientProvider client={queryClient}>
-            <ReactQueryDevtools />
-            <App />
-    </QueryClientProvider>,
+    <ThemeProvider theme={theme}>
+        <QueryClientProvider client={queryClient}>
+                <ReactQueryDevtools />
+                <div className="parallax">
+                    <App />
+                </div>
+        </QueryClientProvider>
+    </ThemeProvider>,
     document.getElementById('root')
 );
