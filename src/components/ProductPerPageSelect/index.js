@@ -6,6 +6,7 @@ import FormControl from '@material-ui/core/FormControl'
 import InputLabel from '@material-ui/core/InputLabel'
 import MenuItem from '@material-ui/core/MenuItem'
 import Select from '@material-ui/core/Select'
+import ShoppingBasketIcon from '@material-ui/icons/ShoppingBasket'
 
 const useStyles = makeStyles((theme) => ({    
     formControl: {
@@ -29,9 +30,9 @@ export default function ProductPerPageSelect(props) {
                     onChange={props.onChange}
                     label="Prikaz po strani"
                 >
-                    <MenuItem value="9">9</MenuItem>
-                    <MenuItem value="27">27</MenuItem>
-                    <MenuItem value="54">54</MenuItem>
+                    <MenuItem value="15">15</MenuItem>
+                    <MenuItem value="30">30</MenuItem>
+                    <MenuItem value="45">45</MenuItem>
                 </Select>
             </FormControl>
 

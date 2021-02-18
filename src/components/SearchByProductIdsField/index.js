@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 
 import Box from '@material-ui/core/Box'
@@ -7,11 +8,6 @@ import TextField from '@material-ui/core/TextField'
 import Tooltip from '@material-ui/core/Tooltip'
 
 const useStyles = makeStyles((theme) => ({
-    root: {
-        [theme.breakpoints.down('xs')]: {
-            display: 'none'
-        }        
-    },   
     searchField: {
         width: "100%",
         [theme.breakpoints.down('sm')]: {
@@ -33,27 +29,29 @@ const useStyles = makeStyles((theme) => ({
 export default function SearchByProductIdsField(props) {
     const classes = useStyles()
 
+    const [productIds, setProductIds] = useState('')
+
+    const handleSearchChange = (event) => {
+        setProductIds(event.target.value)
+    }
+
     return (
-        <Box mt={10} mb={3} className={classes.root}>
-            <Paper className={classes.paper} elevation={3}>
-                <Box p={2} >
-                    <form noValidate autoComplete="off">
-                        <Tooltip title="U svakom redu unesite po jednu šifru proizvoda i kliknite dugme 'Pretraga'">
-                            <div className={classes.label}><span className={classes.labelText}>Unesite šifre za pretragu:</span></div>
-                        </Tooltip>
-                        <TextField
-                            className={classes.searchField}
-                            label="Šifre proizvoda"
-                            variant="outlined"
-                            multiline
-                            rows={10}
-                        />
-                        <Button variant="outlined" className={classes.button}>
-                        Pretraga
-                        </Button>                
-                    </form>
-                </Box>
-            </Paper>
-        </Box>
+        <form noValidate autoComplete="off">
+            <Tooltip title="U svakom redu unesite po jednu šifru proizvoda i kliknite dugme 'Pretraga'">
+                <div className={classes.label}><span className={classes.labelText}>Unesite šifre za pretragu:</span></div>
+            </Tooltip>
+            <TextField
+                className={classes.searchField}
+                label="Šifre proizvoda"
+                variant="outlined"
+                multiline
+                rows={10}
+                value={productIds}
+                onChange={handleSearchChange}
+            />
+            <Button variant="outlined" className={classes.button} onClick={() => props.onIdsChange(productIds)}>
+            Pretraga
+            </Button>                
+        </form>
     )
 }

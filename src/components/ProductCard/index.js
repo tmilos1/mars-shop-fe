@@ -14,6 +14,10 @@ import LightBox from '../LightBox'
 const useStyles = makeStyles((theme) => ({
     title: {
         background: theme.palette.action.selected,
+        fontSize: '18px'
+    },
+    header: {
+        height: "60px"
     },
     media: {
         height: 0,

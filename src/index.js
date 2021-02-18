@@ -18,9 +18,7 @@ ReactDOM.render(
     <ThemeProvider theme={theme}>
         <QueryClientProvider client={queryClient}>
                 <ReactQueryDevtools />
-                <div className="parallax">
-                    <App />
-                </div>
+                <App />
         </QueryClientProvider>
     </ThemeProvider>,
     document.getElementById('root')

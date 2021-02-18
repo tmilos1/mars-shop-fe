@@ -1,3 +1,5 @@
+import { useState } from 'react'
+
 import Paper from '@material-ui/core/Paper'
 import MenuItem from '@material-ui/core/MenuItem'
 import MenuList from '@material-ui/core/MenuList'
@@ -25,13 +27,16 @@ export default function FilterMenu(props) {
     const classes = useStyles()
 
     return (
-        <div className={classes.root}>
-            <Paper className={classes.paper} elevation={3}>
-                <MenuList>
-                    <MenuItem className={classes.menuItem}>Novi proizvodi</MenuItem>
-                    <MenuItem className={classes.menuItem}>Akcija</MenuItem>
-                </MenuList>
-            </Paper>
-        </div>
+        <MenuList>
+            <MenuItem onClick={(event) => props.onFilterChange(event, 'svi')} selected={'svi' === props.filter} className={classes.menuItem}>
+                Svi
+            </MenuItem>
+            <MenuItem onClick={(event) => props.onFilterChange(event, 'novi_proizvodi')} selected={'novi_proizvodi' === props.filter} className={classes.menuItem}>
+                Novi proizvodi
+            </MenuItem>
+            <MenuItem onClick={(event) => props.onFilterChange(event, 'akcija')} selected={'akcija' === props.filter} className={classes.menuItem}>
+                Akcija
+            </MenuItem>
+        </MenuList>
     )
 }
