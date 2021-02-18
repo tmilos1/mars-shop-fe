@@ -46,27 +46,57 @@ function App() {
     const [ids, setIds] = useState('')
     const [idsSerializedArray, setIdsSerializedArray] = useState([])
     const [search, setSearch] = useState('')
+    const [searchInput, setSearchInput] = useState('')
 
     const handleChangeRedosled = (event) => {
         setRedosled(event.target.value)
         setPage(1)
+        pushToWindowHistory()
     }
 
     const handleChangeSize = (event) => {
         setSize(event.target.value)
         setPage(1)
+        pushToWindowHistory()
     }
 
     const handlePageChange = (event, newPage) => {
         setPage(newPage)
         window.scrollTo(0, 0)
-        window.history.pushState({ page: newPage }, "Strana " + newPage, "?page=" + newPage)
+        pushToWindowHistory()
+    }
+
+    const pushToWindowHistory = () => {
+        window.history.pushState(buildHistoryObject(), "", "/products?" + buildQueryParams())
+    }
+
+    const buildQueryParams = () => {
+        return "size=" + size
+        + "&page=" + page
+        + "&filter=" + filter
+        + "&ids=" + idsSerializedArray
+        + "&search=" + encodeURIComponent(searchInput)
+        + "&category=" + category
+        + "&order=" + redosled
+    }
+
+    const buildHistoryObject = () => {
+        return {
+            size: size,
+            page: page,
+            filter: filter,
+            ids: idsSerializedArray,
+            search: encodeURIComponent(searchInput),
+            category: category,
+            order: redosled,
+        }
     }
 
     const handleCategoryChange = (event, value) => {
         setCategory(value)
         setPage(1)
         window.scrollTo(0, 0)
+        pushToWindowHistory()
     }
 
     const handleFilterChange = (event, value) => {
@@ -75,6 +105,7 @@ function App() {
         setIdsSerializedArray("")
         setSearch("")
         setCategory("")
+        pushToWindowHistory()
     }
 
     const handleIdsChange = (event) => {
@@ -83,6 +114,7 @@ function App() {
 
     const handlePretragaClick = () => {
         setIdsSerializedArray(getNormalizedIds())
+        pushToWindowHistory()
     }
 
     const getNormalizedIds = () => {
@@ -91,23 +123,26 @@ function App() {
         ))
     }
 
-    const handleChangeSearch = (value) => {
-        setSearch(value)
+    const handleSearchChange = (event) => {
+        setSearch(event.target.value)
     }
 
-    const fetchProducts = (page = 1, size = 15) => fetch(
-        process.env.REACT_APP_API_ROOT
-        + "/products?size=" + size
-        + "&page=" + page
-        + "&filter=" + filter
-        + "&ids=" + idsSerializedArray
-        + "&search=" + encodeURIComponent(search)
-        + "&category=" + category
-        + "&order=" + redosled
+    /**
+     * var search - current search value, don't trigger api fetch on each value change
+     * var searchInput - pressed search button or pressed enter - trigger api fetch
+     */
+    const handleSearchInput = () => {
+        console.log(search)
+        setSearchInput(search)
+        pushToWindowHistory()
+    }
+
+    const fetchProducts = () => fetch(
+        process.env.REACT_APP_API_ROOT + "/products?" + buildQueryParams()
     ).then((res) => res.json())
 
     const { isLoading, data: products, error, isSuccess }
-        = useQuery(["productsData", size, page, category, filter, idsSerializedArray, search, redosled], () =>
+        = useQuery(["productsData", size, page, category, filter, idsSerializedArray, searchInput, redosled], () =>
             fetchProducts(page, size), { keepPreviousData: true })
 
     if (error) return "An error has occurred: " + error.message
@@ -153,7 +188,7 @@ function App() {
                                     <ProductSortSelect onChange={handleChangeRedosled} value={redosled} />
                                 </Grid>
                                 <Grid md={7} item>
-                                    <SearchField  onChange={handleChangeSearch} value={search} />
+                                    <SearchField  onSearchInput={handleSearchInput} onSearchChange={handleSearchChange} value={search} />
                                 </Grid>
                                 <Grid md={2} item>
                                     <ProductPerPageSelect onChange={handleChangeSize} value={size} />
