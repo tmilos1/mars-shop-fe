@@ -124,7 +124,7 @@ function App() {
                                     <Typography className={classes.sidebarTitle} >Kategorije</Typography>   
                                 </AccordionSummary>
                                 <AccordionDetails>
-                                    <CategoryMenu onCategoryChange={handleCategoryChange} />
+                                    <CategoryMenu onCategoryChange={handleCategoryChange} category={category} />
                                 </AccordionDetails>                                           
                             </Accordion>
 

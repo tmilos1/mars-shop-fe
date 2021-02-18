@@ -56,6 +56,7 @@ export default function CategoryMenu(props) {
                 defaultExpanded={['IGR', 'DOM']}
                 defaultExpandIcon={<ChevronRightIcon />}
                 onNodeSelect={props.onCategoryChange}
+                selected={props.category}
             >   {isSuccess && (
                         <>
                             {renderTree(wrapCategories('IGR'))}
