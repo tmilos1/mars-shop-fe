@@ -38,7 +38,7 @@ const useStyles = makeStyles((theme) => ({
 function App() {
     const classes = useStyles()
 
-    const [redosled, setRedosled] = useState('Naziv')
+    const [order, setOrder] = useState('Naziv')
     const [page, setPage] = useState(1)
     const [size, setSize] = useState(15)
     const [category, setCategory] = useState('')
@@ -49,35 +49,37 @@ function App() {
     const [searchInput, setSearchInput] = useState('')
 
     const handleChangeRedosled = (event) => {
-        setRedosled(event.target.value)
+        setOrder(event.target.value)
         setPage(1)
-        pushToWindowHistory()
+        pushToWindowHistory({order: event.target.value, page: 1})
     }
 
     const handleChangeSize = (event) => {
         setSize(event.target.value)
         setPage(1)
-        pushToWindowHistory()
+        pushToWindowHistory({size: event.target.value, page: 1})
     }
 
     const handlePageChange = (event, newPage) => {
         setPage(newPage)
+        pushToWindowHistory({page: newPage})
+
         window.scrollTo(0, 0)
-        pushToWindowHistory()
     }
 
-    const pushToWindowHistory = () => {
-        window.history.pushState(buildHistoryObject(), "", "/products?" + buildQueryParams())
+    const pushToWindowHistory = (params = {}) => {
+        window.history.pushState(buildHistoryObject(), "", "/products?" + buildQueryParams(params))
     }
 
-    const buildQueryParams = () => {
-        return "size=" + size
-        + "&page=" + page
-        + "&filter=" + filter
+    const buildQueryParams = (params = {}) => {
+        console.log(params.filter)
+        return "size=" + (!!params.size ? params.size : size)
+        + "&page=" + (!!params.page ? params.page : page)
+        + "&filter=" + (!!params.filter ? params.filter : filter)
         + "&ids=" + idsSerializedArray
         + "&search=" + encodeURIComponent(searchInput)
-        + "&category=" + category
-        + "&order=" + redosled
+        + "&category=" + (!!params.category ? params.category : category)
+        + "&order=" + (!!params.order ? params.order : order)
     }
 
     const buildHistoryObject = () => {
@@ -88,33 +90,42 @@ function App() {
             ids: idsSerializedArray,
             search: encodeURIComponent(searchInput),
             category: category,
-            order: redosled,
+            order: order,
         }
     }
 
     const handleCategoryChange = (event, value) => {
         setCategory(value)
         setPage(1)
+        setFilter('svi')
+        setIds("")
+        setIdsSerializedArray("")        
+        pushToWindowHistory({category: value, ids: "", filter: 'svi', page: 1})
+
         window.scrollTo(0, 0)
-        pushToWindowHistory()
     }
 
     const handleFilterChange = (event, value) => {
         setFilter(value)
+        setPage(1)
         setIds("")
         setIdsSerializedArray("")
         setSearch("")
         setCategory("")
-        pushToWindowHistory()
+        pushToWindowHistory({filter: value, ids: "", search: "", category: "", page: 1})
+
+        window.scrollTo(0, 0)
     }
 
     const handleIdsChange = (event) => {
         setIds(event.target.value)
     }
-
+    
     const handlePretragaClick = () => {
         setIdsSerializedArray(getNormalizedIds())
-        pushToWindowHistory()
+        setFilter('svi')
+        pushToWindowHistory({ids: getNormalizedIds(), filter: 'svi'})
+        window.scrollTo(0, 0)
     }
 
     const getNormalizedIds = () => {
@@ -134,7 +145,8 @@ function App() {
     const handleSearchInput = () => {
         console.log(search)
         setSearchInput(search)
-        pushToWindowHistory()
+        setFilter('svi')
+        pushToWindowHistory({searchInput: search})
     }
 
     const fetchProducts = () => fetch(
@@ -142,7 +154,7 @@ function App() {
     ).then((res) => res.json())
 
     const { isLoading, data: products, error, isSuccess }
-        = useQuery(["productsData", size, page, category, filter, idsSerializedArray, searchInput, redosled], () =>
+        = useQuery(["productsData", size, page, category, filter, idsSerializedArray, searchInput, order], () =>
             fetchProducts(page, size), { keepPreviousData: true })
 
     if (error) return "An error has occurred: " + error.message
@@ -185,7 +197,7 @@ function App() {
                         <Grid md={10} item>
                             <Grid container justify="space-between">
                                 <Grid md={2} item>
-                                    <ProductSortSelect onChange={handleChangeRedosled} value={redosled} />
+                                    <ProductSortSelect onChange={handleChangeRedosled} value={order} />
                                 </Grid>
                                 <Grid md={7} item>
                                     <SearchField  onSearchInput={handleSearchInput} onSearchChange={handleSearchChange} value={search} />
