@@ -1,8 +1,5 @@
-import { useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 
-import Box from '@material-ui/core/Box'
-import Paper from '@material-ui/core/Paper'
 import Button from '@material-ui/core/Button'
 import TextField from '@material-ui/core/TextField'
 import Tooltip from '@material-ui/core/Tooltip'
@@ -29,12 +26,6 @@ const useStyles = makeStyles((theme) => ({
 export default function SearchByProductIdsField(props) {
     const classes = useStyles()
 
-    const [productIds, setProductIds] = useState('')
-
-    const handleSearchChange = (event) => {
-        setProductIds(event.target.value)
-    }
-
     return (
         <form noValidate autoComplete="off">
             <Tooltip title="U svakom redu unesite po jednu šifru proizvoda i kliknite dugme 'Pretraga'">
@@ -46,10 +37,10 @@ export default function SearchByProductIdsField(props) {
                 variant="outlined"
                 multiline
                 rows={10}
-                value={productIds}
-                onChange={handleSearchChange}
+                value={props.value}
+                onChange={props.onIdsChange}
             />
-            <Button variant="outlined" className={classes.button} onClick={() => props.onIdsChange(productIds)}>
+            <Button variant="outlined" className={classes.button} onClick={props.onPretragaClick}>
             Pretraga
             </Button>                
         </form>

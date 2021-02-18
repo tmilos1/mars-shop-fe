@@ -43,7 +43,8 @@ function App() {
     const [size, setSize] = useState(15)
     const [category, setCategory] = useState('')
     const [filter, setFilter] = useState('svi')
-    const [ids, setIds] = useState([])
+    const [ids, setIds] = useState('')
+    const [idsSerializedArray, setIdsSerializedArray] = useState([])
     const [search, setSearch] = useState('')
 
     const handleChangeRedosled = (event) => {
@@ -70,10 +71,24 @@ function App() {
 
     const handleFilterChange = (event, value) => {
         setFilter(value)
+        setIds("")
+        setIdsSerializedArray("")
+        setSearch("")
+        setCategory("")
     }
 
-    const handleIdsChange = (value) => {
-        setIds(value.replaceAll(',', '').split("\n"))
+    const handleIdsChange = (event) => {
+        setIds(event.target.value)
+    }
+
+    const handlePretragaClick = () => {
+        setIdsSerializedArray(getNormalizedIds())
+    }
+
+    const getNormalizedIds = () => {
+        return encodeURIComponent(JSON.stringify( 
+            ids.replaceAll(',', '').split("\n")
+        ))
     }
 
     const handleChangeSearch = (value) => {
@@ -85,14 +100,14 @@ function App() {
         + "/products?size=" + size
         + "&page=" + page
         + "&filter=" + filter
-        + "&ids=" + encodeURIComponent(JSON.stringify(ids))
+        + "&ids=" + idsSerializedArray
         + "&search=" + encodeURIComponent(search)
         + "&category=" + category
         + "&order=" + redosled
     ).then((res) => res.json())
 
     const { isLoading, data: products, error, isSuccess }
-        = useQuery(["productsData", size, page, category, filter, ids, search, redosled], () =>
+        = useQuery(["productsData", size, page, category, filter, idsSerializedArray, search, redosled], () =>
             fetchProducts(page, size), { keepPreviousData: true })
 
     if (error) return "An error has occurred: " + error.message
@@ -127,7 +142,7 @@ function App() {
                                     <Typography className={classes.sidebarTitle} >Pretraga</Typography>   
                                 </AccordionSummary>
                                 <AccordionDetails>
-                                    <SearchByProductIdsField onIdsChange={handleIdsChange} />
+                                    <SearchByProductIdsField onIdsChange={handleIdsChange} value={ids} onPretragaClick={handlePretragaClick}/>
                                 </AccordionDetails>                                           
                             </Accordion>
                         </Grid>
