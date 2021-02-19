@@ -28,8 +28,11 @@ export default function CategoryMenu(props) {
     ).then((res) => res.json())
 
     const { data: categories, isSuccess }
-        = useQuery("categoriesData", () =>
-            fetchCategories())
+        = useQuery(
+            "categoriesData", 
+            () => fetchCategories(),
+            {staleTime: 900000} // 15 mins
+    )
 
 
     const wrapCategories = (catCode) => {

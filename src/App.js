@@ -123,8 +123,9 @@ function App() {
     
     const handlePretragaClick = () => {
         setIdsSerializedArray(getNormalizedIds())
+        setPage(1)
         setFilter('svi')
-        pushToWindowHistory({ids: getNormalizedIds(), filter: 'svi'})
+        pushToWindowHistory({ids: getNormalizedIds(), filter: 'svi', page: 1})
         window.scrollTo(0, 0)
     }
 
