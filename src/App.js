@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
+import queryString from 'query-string'
 
 import Container from '@material-ui/core/Container'
 import Grid from '@material-ui/core/Grid'
@@ -37,16 +38,21 @@ const useStyles = makeStyles((theme) => ({
 
 function App() {
     const classes = useStyles()
+    
+    const params = queryString.parse(window.location.search)
 
-    const [order, setOrder] = useState('Naziv')
-    const [page, setPage] = useState(1)
-    const [size, setSize] = useState(15)
-    const [category, setCategory] = useState('')
-    const [filter, setFilter] = useState('svi')
-    const [ids, setIds] = useState('')
-    const [idsSerializedArray, setIdsSerializedArray] = useState([])
-    const [search, setSearch] = useState('')
-    const [searchInput, setSearchInput] = useState('')
+    const defaultIdsSerializedArray = params.ids ? JSON.parse(params.ids) : []
+    const defaultIds = params.ids ? defaultIdsSerializedArray.join(', ') : ''
+
+    const [order, setOrder] = useState(params.order ? params.order : "Naziv")
+    const [page, setPage] = useState(params.page ? parseInt(params.page) : 1)
+    const [size, setSize] = useState(params.size ? parseInt(params.size) : 15)
+    const [category, setCategory] = useState(params.category ? params.category : '')
+    const [filter, setFilter] = useState(params.filter ? params.filter : 'svi')
+    const [ids, setIds] = useState(defaultIds)
+    const [idsSerializedArray, setIdsSerializedArray] = useState(defaultIdsSerializedArray)
+    const [search, setSearch] = useState(params.search ? params.search : '')
+    const [searchInput, setSearchInput] = useState(params.search ? params.search : '')
 
     const handleChangeRedosled = (event) => {
         setOrder(event.target.value)
@@ -72,7 +78,6 @@ function App() {
     }
 
     const buildQueryParams = (params = {}) => {
-        console.log(params.filter)
         return "size=" + (!!params.size ? params.size : size)
         + "&page=" + (!!params.page ? params.page : page)
         + "&filter=" + (!!params.filter ? params.filter : filter)
@@ -119,19 +124,20 @@ function App() {
 
     const handleIdsChange = (event) => {
         setIds(event.target.value)
+        pushToWindowHistory({ids: getNormalizedIds(event.target.value)})        
     }
     
     const handlePretragaClick = () => {
-        setIdsSerializedArray(getNormalizedIds())
+        setIdsSerializedArray(getNormalizedIds(ids))
         setPage(1)
         setFilter('svi')
-        pushToWindowHistory({ids: getNormalizedIds(), filter: 'svi', page: 1})
+        pushToWindowHistory({filter: 'svi', page: 1})
         window.scrollTo(0, 0)
     }
 
-    const getNormalizedIds = () => {
+    const getNormalizedIds = (value) => {
         return encodeURIComponent(JSON.stringify( 
-            ids.replaceAll(',', '').split("\n")
+            value.replaceAll(',', '').split("\n")
         ))
     }
 
@@ -144,7 +150,6 @@ function App() {
      * var searchInput - pressed search button or pressed enter - trigger api fetch
      */
     const handleSearchInput = () => {
-        console.log(search)
         setSearchInput(search)
         setFilter('svi')
         pushToWindowHistory({searchInput: search})
