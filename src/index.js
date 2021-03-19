@@ -1,7 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import './index.css'
-import App from './App'
+import Shop from './Shop'
 import theme from './Theme'
 import { ThemeProvider } from '@material-ui/core/styles'
 
@@ -18,7 +18,7 @@ ReactDOM.render(
     <ThemeProvider theme={theme}>
         <QueryClientProvider client={queryClient}>
                 <ReactQueryDevtools />
-                <App />
+                <Shop />
         </QueryClientProvider>
     </ThemeProvider>,
     document.getElementById('root')

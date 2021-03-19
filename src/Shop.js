@@ -36,7 +36,7 @@ const useStyles = makeStyles((theme) => ({
     }
 }))
 
-function App() {
+function Shop() {
     const classes = useStyles()
     
     const params = queryString.parse(window.location.search)
@@ -264,4 +264,4 @@ function App() {
     );
 }
 
-export default App;
+export default Shop;
