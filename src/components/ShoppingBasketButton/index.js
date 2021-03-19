@@ -59,15 +59,9 @@ export default function ShoppingBasketButton(props) {
             >
                 <DialogTitle id="scroll-dialog-title">Korpa</DialogTitle>
                 <DialogContent dividers={true}>
-                    <DialogContentText
-                        id="scroll-dialog-description"
-                        ref={descriptionElementRef}
-                        tabIndex={-1}
-                    >
 
-                    <Cart />
-
-                    </DialogContentText>
+                    <Cart sessionId={props.sessionId} />
+                    
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleClose} color="primary">

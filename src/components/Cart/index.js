@@ -1,5 +1,6 @@
+import { useState, useEffect } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
-import { useQuery } from 'react-query'
+import { useQuery, useMutation } from 'react-query'
 
 import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
@@ -10,6 +11,7 @@ import Divider from '@material-ui/core/Divider'
 import IconButton from '@material-ui/core/IconButton'
 import AddIcon from '@material-ui/icons/Add';
 import RemoveIcon from '@material-ui/icons/Remove'
+import { ContactSupportOutlined } from '@material-ui/icons'
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -21,22 +23,23 @@ const useStyles = makeStyles((theme) => ({
     },
     listItemNaziv: {
         margin: theme.spacing(1),
-        minWidth: "200px",
-        width: "200px",
+        minWidth: "190px",
+        width: "190px",
     },
     listItemCena: {
         margin: theme.spacing(1),
-        minWidth: "80px",
+        minWidth: "85px",
         textAlign: "right"
     },
     listItemKolicina: {
         margin: theme.spacing(1),
         minWidth: "120px",
-        textAlign: "center"
+        textAlign: "center",
+        marginTop: "-4px"
     },
     listItemIznos: {
         margin: theme.spacing(1),
-        width: "80px",
+        width: "85px",
         textAlign: "right",
         [theme.breakpoints.down('xs')]: {
             display: 'none'
@@ -48,22 +51,25 @@ export default function Cart(props) {
 
     const classes = useStyles()
 
-    const fetchCart = () => fetch(
-        process.env.REACT_APP_API_ROOT + "/cart/" + 1234567890
-    ).then((res) => res.json())
+    const fetchCart = () => fetch(process.env.REACT_APP_API_ROOT + "/cart/" + props.sessionId)
+        .then((res) => res.json())
 
-    const { data: products, isSuccess } = useQuery(["cartData"], () => fetchCart())
+    const { data: products, isSuccess } = useQuery(["cartData", props.sessionId], () => fetchCart())
 
     let productsLen = 0
     if (isSuccess) {
         productsLen = products.length
     }
 
+    const onRemoveProduct = () => {
+        console.log('test on Remove')
+    }
+
     return (
         <List className={classes.root}>
-            {isSuccess &&
+            {isSuccess && Array.isArray(products) &&
                 products.map((product, i) => (
-                    <>
+                    <div key={product.productId}>
                         <ListItem alignItems="flex-start">
                             <ListItemAvatar className={classes.listItemSlika}>
                                 <img src={process.env.REACT_APP_API_ROOT + "/slike/proizvodi/manje/" + product.productId + ".jpg"} width="110px" />
@@ -71,23 +77,23 @@ export default function Cart(props) {
                             <ListItemText
                                 primary={product.name}
                                 secondary={<>
-                                    <p>{"Šifra: " + product.productId}</p>
+                                    {"Šifra: " + product.productId}
                                 </>}
                                 className={classes.listItemNaziv}
                             />
                             <ListItemText
                                 primary={<>
-                                    <p>{product.price} din</p>
+                                    {product.price} din
                                 </>}
                                 className={classes.listItemCena}
                             />
                             <ListItemText
                                 primary={<>
-                                    <IconButton color="primary">
+                                    <IconButton color="primary" onClick={onRemoveProduct}>
                                         <RemoveIcon />
                                     </IconButton>
-                                {product.kolicina}
-                                <IconButton color="primary">
+                                    {product.qty}
+                                    <IconButton color="primary">
                                         <AddIcon />
                                     </IconButton>
                                 </>}
@@ -95,7 +101,7 @@ export default function Cart(props) {
                             />
                             <ListItemText
                                 primary={<>
-                                    <p>{product.iznos} din</p>
+                                    {product.subTotal}
                                 </>}
                                 className={classes.listItemIznos}
                             />
@@ -103,7 +109,7 @@ export default function Cart(props) {
                         {productsLen !== i + 1 &&
                             <Divider />
                         }
-                    </>
+                    </div>
                 ))
             }
         </List>

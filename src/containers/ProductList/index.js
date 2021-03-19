@@ -13,7 +13,7 @@ export default function ProductList(props) {
                 : 
                     props.products.content.map(product => (
                         <Grid xs={12} sm={6} md={6} lg={4} item key={product.productId}>
-                            <ProductCard product={product} />
+                            <ProductCard product={product} sessionId={props.sessionId} />
                         </Grid>
                     ))
                 }

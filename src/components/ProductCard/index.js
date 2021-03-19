@@ -1,4 +1,6 @@
 import React, { useState } from 'react'
+import { useQuery, useMutation } from 'react-query'
+
 import { makeStyles } from '@material-ui/core/styles'
 import Card from '@material-ui/core/Card'
 import CardHeader from '@material-ui/core/CardHeader'
@@ -70,6 +72,23 @@ export default function ProductCard(props) {
         setOpen(false)
     }
 
+    const addToCartMutation = useMutation(productId => {
+        return fetch(process.env.REACT_APP_API_ROOT + 
+            '/cart/', { 
+                method: 'PUT', 
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ productId, qty: 1, sessionId: props.sessionId })
+            })
+        }
+    )
+
+    const handleAddToCart = (productId) => {
+        addToCartMutation.mutate(productId)
+    }
+
     const sifraArtiklaText = `Šifra: ${props.product.productId}`
 
     return (
@@ -115,6 +134,7 @@ export default function ProductCard(props) {
                         variant="outlined"
                         color="primary"
                         startIcon={<ShoppingCartIcon />}
+                        onClick={() => handleAddToCart(props.product.productId)}
                     >
                         Dodaj u korpu
                     </Button>

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import queryString from 'query-string'
 
@@ -44,6 +44,7 @@ function App() {
     const defaultIdsSerializedArray = params.ids ? JSON.parse(params.ids) : []
     const defaultIds = params.ids ? defaultIdsSerializedArray.join(', ') : ''
 
+    const [sessionId, setSessionId] = useState(localStorage.getItem('sessionId') || '')
     const [order, setOrder] = useState(params.order ? params.order : "Naziv")
     const [page, setPage] = useState(params.page ? parseInt(params.page) : 1)
     const [size, setSize] = useState(params.size ? parseInt(params.size) : 15)
@@ -53,6 +54,25 @@ function App() {
     const [idsSerializedArray, setIdsSerializedArray] = useState(defaultIdsSerializedArray)
     const [search, setSearch] = useState(params.search ? params.search : '')
     const [searchInput, setSearchInput] = useState(params.search ? params.search : '')
+
+    useEffect(() => {
+        async function postCartLocal() {
+            let response = await fetch(
+                process.env.REACT_APP_API_ROOT + "/cart/",
+                { method: 'POST' }
+            )
+            response = await response.json()
+
+            setSessionId(response.sessionId)
+            localStorage.setItem('sessionId', response.sessionId)
+        }
+
+        if (!sessionId) {
+            postCartLocal()
+        }
+
+        // handle wrong sessionId
+    }, [sessionId])
 
     const handleChangeRedosled = (event) => {
         setOrder(event.target.value)
@@ -212,11 +232,11 @@ function App() {
                                     <ProductPerPageSelect onChange={handleChangeSize} value={size} />
                                 </Grid>
                                 <Grid md={1} item>
-                                    <ShoppingBasketButton />
+                                    <ShoppingBasketButton sessionId={sessionId} />
                                 </Grid>
                             </Grid>
 
-                            <ProductList products={products} isLoading={isLoading} />
+                            <ProductList products={products} isLoading={isLoading} sessionId={sessionId} />
                         </Grid>
 
                         <Grid sm={false} md={2} item>
