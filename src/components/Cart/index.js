@@ -69,7 +69,7 @@ export default function Cart(props) {
                                 <img src={process.env.REACT_APP_API_ROOT + "/slike/proizvodi/manje/" + product.productId + ".jpg"} width="110px" />
                             </ListItemAvatar>
                             <ListItemText
-                                primary={product.naziv}
+                                primary={product.name}
                                 secondary={<>
                                     <p>{"Šifra: " + product.productId}</p>
                                 </>}
@@ -77,7 +77,7 @@ export default function Cart(props) {
                             />
                             <ListItemText
                                 primary={<>
-                                    <p>{product.cena} din</p>
+                                    <p>{product.price} din</p>
                                 </>}
                                 className={classes.listItemCena}
                             />

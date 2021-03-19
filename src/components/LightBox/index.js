@@ -119,24 +119,24 @@ export default function LightBox(props) {
                     <header className={classes.topBar}>
 
                         <section className={classes.naziv}>
-                            {props.product.naziv}
+                            {props.product.name}
                         </section>
 
                         <section className={classes.detaljiProizvoda}>
                             <dl className={classes.dl}>
                                 <dt className={classes.dt}>Opis pakovanja:</dt>
-                                <dd className={classes.dd}>{props.product.opisPakovanja}</dd>
+                                <dd className={classes.dd}>{props.product.dimension}</dd>
 
                                 <dt className={classes.dt}>Trans. pakovanje:</dt>
                                 <dd className={classes.dd}>{props.product.transportnoPakovanje}</dd>
 
                                 <dt className={classes.dt}>Min. pakovanje:</dt>
-                                <dd className={classes.dd}>{props.product.minPakovanje}</dd>
+                                <dd className={classes.dd}>{props.product.minPacking}</dd>
                             </dl>
                         </section>
 
                         <section className={classes.cena}>
-                            {props.product.cena}
+                            {props.product.price}
                         </section>
 
                         <section>
