@@ -93,32 +93,6 @@ function Shop() {
         window.scrollTo(0, 0)
     }
 
-    const pushToWindowHistory = (params = {}) => {
-        window.history.pushState(buildHistoryObject(), "", "/products?" + buildQueryParams(params))
-    }
-
-    const buildQueryParams = (params = {}) => {
-        return "size=" + (!!params.size ? params.size : size)
-        + "&page=" + (!!params.page ? params.page : page)
-        + "&filter=" + (!!params.filter ? params.filter : filter)
-        + "&ids=" + idsSerializedArray
-        + "&search=" + encodeURIComponent(searchInput)
-        + "&category=" + (!!params.category ? params.category : category)
-        + "&order=" + (!!params.order ? params.order : order)
-    }
-
-    const buildHistoryObject = () => {
-        return {
-            size: size,
-            page: page,
-            filter: filter,
-            ids: idsSerializedArray,
-            search: encodeURIComponent(searchInput),
-            category: category,
-            order: order,
-        }
-    }
-
     const handleCategoryChange = (event, value) => {
         setCategory(value)
         setPage(1)
@@ -175,6 +149,32 @@ function Shop() {
         pushToWindowHistory({searchInput: search})
     }
 
+    const pushToWindowHistory = (params = {}) => {
+        window.history.pushState(buildHistoryObject(), "", "/products?" + buildQueryParams(params))
+    }
+
+    const buildQueryParams = (params = {}) => {
+        return "size=" + (!!params.size ? params.size : size)
+        + "&page=" + (!!params.page ? params.page : page)
+        + "&filter=" + (!!params.filter ? params.filter : filter)
+        + "&ids=" + idsSerializedArray
+        + "&search=" + encodeURIComponent(searchInput)
+        + "&category=" + (!!params.category ? params.category : category)
+        + "&order=" + (!!params.order ? params.order : order)
+    }
+
+    const buildHistoryObject = () => {
+        return {
+            size: size,
+            page: page,
+            filter: filter,
+            ids: idsSerializedArray,
+            search: encodeURIComponent(searchInput),
+            category: category,
+            order: order,
+        }
+    }
+    
     const fetchProducts = () => fetch(
         process.env.REACT_APP_API_ROOT + "/products?" + buildQueryParams()
     ).then((res) => res.json())

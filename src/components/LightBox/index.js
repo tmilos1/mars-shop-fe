@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
+import { useQuery, useMutation, useQueryClient } from 'react-query'
 
 import Modal from '@material-ui/core/Modal'
 import Backdrop from '@material-ui/core/Backdrop'
@@ -83,6 +84,8 @@ const useStyles = makeStyles((theme) => ({
 
 export default function LightBox(props) {
     const classes = useStyles()
+    const queryClient = useQueryClient()
+
     const onClose = props.onClose
 
     const escFunction = useCallback((event) => {
@@ -98,6 +101,26 @@ export default function LightBox(props) {
           document.removeEventListener("keydown", escFunction, false)
         };
       }, [escFunction])
+
+      const addProductMutation = useMutation(productId => {
+        return fetch(process.env.REACT_APP_API_ROOT + 
+            '/cart/', { 
+                method: 'PUT', 
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ productId, qty: 1, sessionId: props.sessionId })
+            })
+        },{
+            onSuccess: () => {
+              queryClient.invalidateQueries('cartData')
+            }
+        })
+
+    const handleAddToCart = (productId) => {
+        addProductMutation.mutate(productId)
+    }
 
     return (
 
@@ -144,6 +167,7 @@ export default function LightBox(props) {
                                 variant="contained"
                                 className={classes.button}
                                 startIcon={<ShoppingCartIcon />}
+                                onClick={() => handleAddToCart(props.product.productId)}
                             >
                                 Dodaj u korpu
                             </Button>

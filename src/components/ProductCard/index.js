@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { useQuery, useMutation } from 'react-query'
+import { useQuery, useMutation, useQueryClient } from 'react-query'
 
 import { makeStyles } from '@material-ui/core/styles'
 import Card from '@material-ui/core/Card'
@@ -59,6 +59,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function ProductCard(props) {
     const classes = useStyles()
+    const queryClient = useQueryClient()
 
     const [open, setOpen] = useState(false)
     const [elevation, setElevation] = useState(3)
@@ -72,7 +73,7 @@ export default function ProductCard(props) {
         setOpen(false)
     }
 
-    const addToCartMutation = useMutation(productId => {
+    const addProductMutation = useMutation(productId => {
         return fetch(process.env.REACT_APP_API_ROOT + 
             '/cart/', { 
                 method: 'PUT', 
@@ -82,11 +83,14 @@ export default function ProductCard(props) {
                 },
                 body: JSON.stringify({ productId, qty: 1, sessionId: props.sessionId })
             })
-        }
-    )
+        },{
+            onSuccess: () => {
+              queryClient.invalidateQueries('cartData')
+            }
+        })
 
     const handleAddToCart = (productId) => {
-        addToCartMutation.mutate(productId)
+        addProductMutation.mutate(productId)
     }
 
     const sifraArtiklaText = `Šifra: ${props.product.productId}`
@@ -144,6 +148,7 @@ export default function ProductCard(props) {
                     open={open}
                     onClose={handleClose}
                     product={props.product}
+                    sessionId={props.sessionId}
                 />
             </Card>
         </Slide>

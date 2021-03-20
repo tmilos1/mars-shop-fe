@@ -1,12 +1,13 @@
 import { useState, useEffect } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
-import { useQuery, useMutation } from 'react-query'
+import { useQuery, useMutation, useQueryClient } from 'react-query'
 
 import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
 import ListItemText from '@material-ui/core/ListItemText'
 import ListItemAvatar from '@material-ui/core/ListItemAvatar'
 import Divider from '@material-ui/core/Divider'
+import CircularProgress from '@material-ui/core/CircularProgress'
 
 import IconButton from '@material-ui/core/IconButton'
 import AddIcon from '@material-ui/icons/Add';
@@ -50,6 +51,7 @@ const useStyles = makeStyles((theme) => ({
 export default function Cart(props) {
 
     const classes = useStyles()
+    const queryClient = useQueryClient()
 
     const fetchCart = () => fetch(process.env.REACT_APP_API_ROOT + "/cart/" + props.sessionId)
         .then((res) => res.json())
@@ -61,8 +63,44 @@ export default function Cart(props) {
         productsLen = products.length
     }
 
-    const onRemoveProduct = () => {
-        console.log('test on Remove')
+    const addProductMutation = useMutation(productId => {
+        return fetch(process.env.REACT_APP_API_ROOT + 
+            '/cart/', { 
+                method: 'PUT', 
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ productId, qty: 1, sessionId: props.sessionId })
+            })
+        },{
+            onSuccess: () => {
+              queryClient.invalidateQueries('cartData')
+            }
+        })
+
+    const removeProductMutation = useMutation(productId => {
+        return fetch(process.env.REACT_APP_API_ROOT + 
+            '/cart/', { 
+                method: 'PUT', 
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ productId, qty: -1, sessionId: props.sessionId })
+            })
+        },{
+            onSuccess: () => {
+              queryClient.invalidateQueries('cartData')
+            }
+        })
+
+    const handleAddProduct = (productId) => {
+        addProductMutation.mutate(productId)
+    }
+
+    const handleRemoveProduct = (productId) => {
+        removeProductMutation.mutate(productId)
     }
 
     return (
@@ -89,19 +127,31 @@ export default function Cart(props) {
                             />
                             <ListItemText
                                 primary={<>
-                                    <IconButton color="primary" onClick={onRemoveProduct}>
-                                        <RemoveIcon />
-                                    </IconButton>
-                                    {product.qty}
-                                    <IconButton color="primary">
-                                        <AddIcon />
-                                    </IconButton>
+                                    {addProductMutation.isLoading || removeProductMutation.isLoading ? 
+                                        <CircularProgress />
+                                        : 
+                                        <>
+                                            <IconButton color="primary" onClick={() => handleRemoveProduct(product.productId)}>
+                                                <RemoveIcon />
+                                            </IconButton>
+                                            {product.qty}
+                                            <IconButton color="primary" onClick={() => handleAddProduct(product.productId)}>
+                                                <AddIcon />
+                                            </IconButton>
+                                        </>
+                                    }
                                 </>}
                                 className={classes.listItemKolicina}
                             />
                             <ListItemText
                                 primary={<>
-                                    {product.subTotal}
+                                    {addProductMutation.isLoading || removeProductMutation.isLoading ? 
+                                        <CircularProgress />
+                                        :                 
+                                        <>                
+                                            {product.subTotal}
+                                        </>
+                                    }
                                 </>}
                                 className={classes.listItemIznos}
                             />
