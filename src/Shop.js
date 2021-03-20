@@ -1,7 +1,10 @@
-import { useState, useEffect, useReducer } from 'react'
+import { useEffect, useReducer } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { useQuery } from 'react-query'
 import axios from 'axios'
+
+import useSession from './util/useSession'
+import shopReducer from './util/shopReducer'
 
 import Container from '@material-ui/core/Container'
 import Grid from '@material-ui/core/Grid'
@@ -35,6 +38,10 @@ const useStyles = makeStyles((theme) => ({
     }
 }))
 
+/*
+ * var search - current search value, don't trigger api fetch on each value change
+ * var searchInput - pressed search button or pressed enter - trigger api fetch
+ */
 const initialState = {
     order: "Naziv",
     page: 1,
@@ -47,116 +54,11 @@ const initialState = {
     searchInput: ''
 }
 
-function reducer(state, action) {
-    switch (action.type) {
-        case 'CHANGE_ORDER':
-            return {
-                ...state,
-                order: action.data.order,
-                page: 1
-            }
-        case 'CHANGE_SIZE':
-            return {
-                ...state,
-                size: action.data.size,
-                page: 1
-            }
-        case 'CHANGE_PAGE':
-            return {
-                ...state,
-                page: action.data.page
-            }
-        case 'CHANGE_CATEGORY':
-            return {
-                ...state,
-                category: action.data.category,
-                page: 1,
-                filter: 'svi',
-                ids: '',
-                idsSerializedArray: '',
-                search: '',
-                searchInput: ''
-            }
-        case 'CHANGE_FILTER':
-            return {
-                ...state,
-                filter: action.data.filter,
-                page: 1,
-                ids: '',
-                idsSerializedArray: '',
-                search: '',
-                category: ''
-            }
-        case 'CHANGE_IDS':
-            return {
-                ...state,
-                ids: action.data.ids,
-            }
-        case 'CLICK_PRETRAGA':
-            return {
-                ...state,
-                idsSerializedArray: getNormalizedIds(state.ids),
-                page: 1,
-                category: '',
-                filter: 'svi',
-            }
-        case 'CHANGE_SEARCH':
-            return {
-                ...state,
-                search: action.data.search,
-            }
-        case 'SEARCH_INPUT':
-            return {
-                ...state,
-                searchInput: state.search,
-                page: 1,
-                category: '',
-                filter: 'svi',
-            }
-        default:
-            throw new Error();
-    }
-}
-
-/*
- * var search - current search value, don't trigger api fetch on each value change
- * var searchInput - pressed search button or pressed enter - trigger api fetch
- */
-
-const getNormalizedIds = (value) => {
-    return encodeURIComponent(JSON.stringify(
-        value.replaceAll(',', '').split("\n")
-    ))
-}
-
 function Shop() {
     const classes = useStyles()
-    const [state, dispatch] = useReducer(reducer, initialState)
-    const [sessionId, setSessionId] = useState(localStorage.getItem('sessionId') || '')
+    const [state, dispatch] = useReducer(shopReducer, initialState)
 
-    useEffect(() => {
-        async function postCartLocal() {
-            let response = await axios.post('/cart')
-
-            setSessionId(response.data.sessionId)
-            localStorage.setItem('sessionId', response.data.sessionId)
-        }
-
-        async function checkSession(sessionId) {
-
-            try {
-                await axios('/cart/' + sessionId)
-            } catch(e) {
-                await postCartLocal()
-            }
-        }
-
-        if (sessionId) {
-            checkSession(sessionId)
-        } else {
-            postCartLocal()
-        }
-    }, [sessionId])
+    const sessionId = useSession()
 
     const buildQueryParams = () => {
         return "size=" + state.size
