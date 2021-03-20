@@ -1,6 +1,5 @@
 import { useState, useEffect, useReducer } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
-import queryString from 'query-string'
 import { useQuery } from 'react-query'
 import axios from 'axios'
 
@@ -74,7 +73,9 @@ function reducer(state, action) {
                 page: 1,
                 filter: 'svi',
                 ids: '',
-                idsSerializedArray: ''
+                idsSerializedArray: '',
+                search: '',
+                searchInput: ''
             }
         case 'CHANGE_FILTER':
             return {
@@ -87,7 +88,6 @@ function reducer(state, action) {
                 category: ''
             }
         case 'CHANGE_IDS':
-            console.log(action.data.ids)
             return {
                 ...state,
                 ids: action.data.ids,
@@ -97,6 +97,7 @@ function reducer(state, action) {
                 ...state,
                 idsSerializedArray: getNormalizedIds(state.ids),
                 page: 1,
+                category: '',
                 filter: 'svi',
             }
         case 'CHANGE_SEARCH':
@@ -107,13 +108,20 @@ function reducer(state, action) {
         case 'SEARCH_INPUT':
             return {
                 ...state,
-                searchInput: action.data.search,
+                searchInput: state.search,
+                page: 1,
+                category: '',
                 filter: 'svi',
             }
         default:
             throw new Error();
     }
 }
+
+/*
+ * var search - current search value, don't trigger api fetch on each value change
+ * var searchInput - pressed search button or pressed enter - trigger api fetch
+ */
 
 const getNormalizedIds = (value) => {
     return encodeURIComponent(JSON.stringify(
@@ -124,13 +132,7 @@ const getNormalizedIds = (value) => {
 function Shop() {
     const classes = useStyles()
     const [state, dispatch] = useReducer(reducer, initialState)
-
-    const params = queryString.parse(window.location.search)
-
     const [sessionId, setSessionId] = useState(localStorage.getItem('sessionId') || '')
-
-    const [search, setSearch] = useState(params.search ? params.search : '')
-    const [searchInput, setSearchInput] = useState(params.search ? params.search : '')
 
     useEffect(() => {
         async function postCartLocal() {
@@ -141,9 +143,10 @@ function Shop() {
         }
 
         async function checkSession(sessionId) {
-            let response = await axios('/cart/' + sessionId)
 
-            if (response.status !== 200) {
+            try {
+                await axios('/cart/' + sessionId)
+            } catch(e) {
                 await postCartLocal()
             }
         }
@@ -155,59 +158,42 @@ function Shop() {
         }
     }, [sessionId])
 
-    const buildQueryParams = (params = {}) => {
+    const buildQueryParams = () => {
         return "size=" + state.size
             + "&page=" + state.page
             + "&filter=" + state.filter
             + "&ids=" + state.idsSerializedArray
-            + "&search=" + encodeURIComponent(searchInput)
+            + "&search=" + encodeURIComponent(state.searchInput)
             + "&category=" + state.category
             + "&order=" + state.order
-    }
-
-    const buildHistoryObject = () => {
-        return {
-            size: state.size,
-            page: state.page,
-            filter: state.filter,
-            ids: state.idsSerializedArray,
-            search: encodeURIComponent(searchInput),
-            category: state.category,
-            order: state.order,
-        }
-    }
+    }        
 
     useEffect(() => {
-        window.history.pushState(buildHistoryObject(), "", "/products?" + buildQueryParams(params))
+        const buildHistoryObject = () => {
+            return {
+                size: state.size,
+                page: state.page,
+                filter: state.filter,
+                ids: state.idsSerializedArray,
+                search: encodeURIComponent(state.searchInput),
+                category: state.category,
+                order: state.order,
+            }
+        }
+
+        window.history.pushState(buildHistoryObject(), "", "/products?" + buildQueryParams())
     }, [state.order, state.size, state.page, state.category, state.filter, state.idsSerializedArray,
-        buildHistoryObject, buildQueryParams])
+    state.searchInput, buildQueryParams]) 
 
     useEffect(() => {
         window.scrollTo(0, 0)
-    }, [state.page, state.category, state.filter, state.idsSerializedArray])
-
-    const handleSearchChange = (event) => {
-        setSearch(event.target.value)
-    }
-
-    /**
-     * var search - current search value, don't trigger api fetch on each value change
-     * var searchInput - pressed search button or pressed enter - trigger api fetch
-     */
-    const handleSearchInput = () => {
-        setSearchInput(search)
-        // setFilter('svi')
-        pushToWindowHistory({ searchInput: search })
-    }
-
-    const pushToWindowHistory = (params = {}) => {
-        window.history.pushState(buildHistoryObject(), "", "/products?" + buildQueryParams(params))
-    }
+    }, [state.page, state.category, state.filter, state.idsSerializedArray, state.searchInput])
 
     const fetchProducts = async () => { const { data } = await axios('/products?' + buildQueryParams()); return data }
 
     const { isLoading, data: products, error, isSuccess }
-        = useQuery(["productsData", state.size, state.page, state.category, state.filter, state.idsSerializedArray, searchInput, state.order], 
+        = useQuery(["productsData", state.size, state.page, state.category, state.filter,
+            state.idsSerializedArray, state.searchInput, state.order],
             () => fetchProducts(state.page, state.size), { keepPreviousData: true })
 
     if (error) return "An error has occurred: " + error.message
@@ -224,7 +210,7 @@ function Shop() {
                                     <Typography className={classes.sidebarTitle} >Kategorije</Typography>
                                 </AccordionSummary>
                                 <AccordionDetails>
-                                    <CategoryMenu 
+                                    <CategoryMenu
                                         onCategoryChange={(e, category) => dispatch({ type: 'CHANGE_CATEGORY', data: { category } })}
                                         category={state.category}
                                     />
@@ -247,10 +233,10 @@ function Shop() {
                                     <Typography className={classes.sidebarTitle} >Pretraga</Typography>
                                 </AccordionSummary>
                                 <AccordionDetails>
-                                    <SearchByProductIdsField 
-                                        onIdsChange={(e) => dispatch({ type: 'CHANGE_IDS', data: {ids: e.target.value } })} 
-                                        onPretragaClick={() => dispatch({ type: 'CLICK_PRETRAGA'})}
-                                        value={state.ids} 
+                                    <SearchByProductIdsField
+                                        onIdsChange={(e) => dispatch({ type: 'CHANGE_IDS', data: { ids: e.target.value } })}
+                                        onPretragaClick={() => dispatch({ type: 'CLICK_PRETRAGA' })}
+                                        value={state.ids}
                                     />
                                 </AccordionDetails>
                             </Accordion>
@@ -259,13 +245,21 @@ function Shop() {
                         <Grid md={10} item>
                             <Grid container justify="space-between">
                                 <Grid md={2} item>
-                                    <ProductSortSelect onChange={(e) => dispatch({ type: 'CHANGE_ORDER', data: { order: e.target.value } })} value={state.order} />
+                                    <ProductSortSelect onChange={(e) => dispatch({ type: 'CHANGE_ORDER', data: { order: e.target.value } })}
+                                                       value={state.order}
+                                    />
                                 </Grid>
                                 <Grid md={7} item>
-                                    <SearchField onSearchInput={handleSearchInput} onSearchChange={handleSearchChange} value={search} />
+                                    <SearchField
+                                        onSearchChange={(e) => dispatch({ type: 'CHANGE_SEARCH', data: { search: e.target.value } })}
+                                        onSearchInput={() => dispatch({ type: 'SEARCH_INPUT' })} 
+                                        value={state.search} 
+                                    />
                                 </Grid>
                                 <Grid md={2} item>
-                                    <ProductPerPageSelect onChange={(e) => dispatch({ type: 'CHANGE_SIZE', data: { size: e.target.value } })} value={state.size} />
+                                    <ProductPerPageSelect onChange={(e) => dispatch({ type: 'CHANGE_SIZE', data: { size: e.target.value } })}
+                                        value={state.size} 
+                                    />
                                 </Grid>
                                 <Grid md={1} item>
                                     <ShoppingBasketButton sessionId={sessionId} />
