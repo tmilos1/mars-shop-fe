@@ -105,7 +105,7 @@ export default function Cart(props) {
 
     return (
         <List className={classes.root}>
-            {isSuccess && Array.isArray(products) &&
+            {isSuccess && Array.isArray(products) && products.length > 0 &&
                 products.map((product, i) => (
                     <div key={product.productId}>
                         <ListItem alignItems="flex-start">
@@ -161,6 +161,11 @@ export default function Cart(props) {
                         }
                     </div>
                 ))
+            }
+            {isSuccess && Array.isArray(products) && products.length == 0 &&
+                <>
+                    Korpa je prazna !
+                </>
             }
         </List>
     )

@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { useQuery, useMutation, useQueryClient } from 'react-query'
+import { useMutation, useQueryClient } from 'react-query'
 
 import { makeStyles } from '@material-ui/core/styles'
 import Card from '@material-ui/core/Card'
@@ -12,6 +12,7 @@ import ShoppingCartIcon from '@material-ui/icons/ShoppingCart'
 import Slide from '@material-ui/core/Slide'
 
 import LightBox from '../LightBox'
+import ProductAddedNotification from '../ProductAddedNotification'
 
 const useStyles = makeStyles((theme) => ({
     title: {
@@ -62,6 +63,7 @@ export default function ProductCard(props) {
     const queryClient = useQueryClient()
 
     const [open, setOpen] = useState(false)
+    const [notificationVisible, setNotificationVisible] = useState(false)
     const [elevation, setElevation] = useState(3)
 
     const handleOpen = () => {
@@ -86,6 +88,7 @@ export default function ProductCard(props) {
         },{
             onSuccess: () => {
               queryClient.invalidateQueries('cartData')
+              setNotificationVisible(true)
             }
         })
 
@@ -150,6 +153,7 @@ export default function ProductCard(props) {
                     product={props.product}
                     sessionId={props.sessionId}
                 />
+                <ProductAddedNotification open={notificationVisible} setNotificationVisible={setNotificationVisible} />
             </Card>
         </Slide>
     )

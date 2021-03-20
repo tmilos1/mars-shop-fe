@@ -1,6 +1,6 @@
-import React, { useCallback, useEffect } from 'react'
+import React, { useState, useCallback, useEffect } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
-import { useQuery, useMutation, useQueryClient } from 'react-query'
+import { useMutation, useQueryClient } from 'react-query'
 
 import Modal from '@material-ui/core/Modal'
 import Backdrop from '@material-ui/core/Backdrop'
@@ -8,6 +8,8 @@ import Fade from '@material-ui/core/Fade'
 import Button from '@material-ui/core/Button'
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart'
 import CancelPresentationIcon from '@material-ui/icons/CancelPresentation';
+
+import ProductAddedNotification from '../ProductAddedNotification'
 
 const useStyles = makeStyles((theme) => ({
     modalStyle: {
@@ -85,6 +87,7 @@ const useStyles = makeStyles((theme) => ({
 export default function LightBox(props) {
     const classes = useStyles()
     const queryClient = useQueryClient()
+    const [notificationVisible, setNotificationVisible] = useState(false)
 
     const onClose = props.onClose
 
@@ -115,6 +118,7 @@ export default function LightBox(props) {
         },{
             onSuccess: () => {
               queryClient.invalidateQueries('cartData')
+              setNotificationVisible(true)              
             }
         })
 
@@ -123,7 +127,7 @@ export default function LightBox(props) {
     }
 
     return (
-
+        <>
         <Modal
             className={classes.modalStyle}
             open={props.open}
@@ -183,5 +187,7 @@ export default function LightBox(props) {
 
             </Fade>
         </Modal>
+        <ProductAddedNotification open={notificationVisible} setNotificationVisible={setNotificationVisible} />
+        </>
     )
 }

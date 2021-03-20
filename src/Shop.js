@@ -67,8 +67,20 @@ function Shop() {
             localStorage.setItem('sessionId', response.sessionId)
         }
 
+        async function checkSession(sessionId) {
+            let response = await fetch(
+                process.env.REACT_APP_API_ROOT + "/cart/" + sessionId
+            )
+
+            if (response.status !== 200) {
+                await postCartLocal()
+            }
+        }
+
         if (!sessionId) {
             postCartLocal()
+        } else {
+            checkSession(sessionId)
         }
 
         // handle wrong sessionId
