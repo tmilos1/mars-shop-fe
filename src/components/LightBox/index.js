@@ -1,6 +1,7 @@
 import React, { useState, useCallback, useEffect } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { useMutation, useQueryClient } from 'react-query'
+import axios from 'axios'
 
 import Modal from '@material-ui/core/Modal'
 import Backdrop from '@material-ui/core/Backdrop'
@@ -105,22 +106,14 @@ export default function LightBox(props) {
         };
       }, [escFunction])
 
-      const addProductMutation = useMutation(productId => {
-        return fetch(process.env.REACT_APP_API_ROOT + 
-            '/cart/', { 
-                method: 'PUT', 
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ productId, qty: 1, sessionId: props.sessionId })
-            })
+    const addProductMutation = useMutation(productId => {
+        return axios.put('/cart', { productId, qty: 1, sessionId: props.sessionId })
         },{
             onSuccess: () => {
-              queryClient.invalidateQueries('cartData')
-              setNotificationVisible(true)              
+                queryClient.invalidateQueries('cartData')
+                setNotificationVisible(true)              
             }
-        })
+        })        
 
     const handleAddToCart = (productId) => {
         addProductMutation.mutate(productId)

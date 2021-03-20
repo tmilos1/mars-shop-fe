@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { useQuery, useMutation, useQueryClient } from 'react-query'
+import axios from 'axios'
 
 import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
@@ -12,7 +12,6 @@ import CircularProgress from '@material-ui/core/CircularProgress'
 import IconButton from '@material-ui/core/IconButton'
 import AddIcon from '@material-ui/icons/Add';
 import RemoveIcon from '@material-ui/icons/Remove'
-import { ContactSupportOutlined } from '@material-ui/icons'
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -52,10 +51,9 @@ export default function Cart(props) {
 
     const classes = useStyles()
     const queryClient = useQueryClient()
-
-    const fetchCart = () => fetch(process.env.REACT_APP_API_ROOT + "/cart/" + props.sessionId)
-        .then((res) => res.json())
-
+    
+    const fetchCart = async () => { const {data} = await axios('/cart/' + props.sessionId); return data }
+    
     const { data: products, isSuccess } = useQuery(["cartData", props.sessionId], () => fetchCart())
 
     let productsLen = 0
@@ -64,15 +62,7 @@ export default function Cart(props) {
     }
 
     const addProductMutation = useMutation(productId => {
-        return fetch(process.env.REACT_APP_API_ROOT + 
-            '/cart/', { 
-                method: 'PUT', 
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ productId, qty: 1, sessionId: props.sessionId })
-            })
+        return axios.put('/cart', { productId, qty: 1, sessionId: props.sessionId })
         },{
             onSuccess: () => {
               queryClient.invalidateQueries('cartData')
@@ -80,15 +70,7 @@ export default function Cart(props) {
         })
 
     const removeProductMutation = useMutation(productId => {
-        return fetch(process.env.REACT_APP_API_ROOT + 
-            '/cart/', { 
-                method: 'PUT', 
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ productId, qty: -1, sessionId: props.sessionId })
-            })
+        return axios.put('/cart', { productId, qty: -1, sessionId: props.sessionId })
         },{
             onSuccess: () => {
               queryClient.invalidateQueries('cartData')

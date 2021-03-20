@@ -1,12 +1,12 @@
 import { makeStyles } from '@material-ui/core/styles'
+import { useQuery } from 'react-query'
+import axios from 'axios'
 
 import Box from '@material-ui/core/Box'
 import TreeView from '@material-ui/lab/TreeView'
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
 import ChevronRightIcon from '@material-ui/icons/ChevronRight'
 import TreeItem from '@material-ui/lab/TreeItem'
-
-import { useQuery } from 'react-query'
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -22,18 +22,11 @@ const useStyles = makeStyles((theme) => ({
 export default function CategoryMenu(props) {
     const classes = useStyles()
 
-    const fetchCategories = () => fetch(
-        process.env.REACT_APP_API_ROOT
-        + "/categories"
-    ).then((res) => res.json())
+    const fetchCategories = async () => { const {data} = await axios('/categories'); return data }
 
     const { data: categories, isSuccess }
-        = useQuery(
-            "categoriesData", 
-            () => fetchCategories(),
-            {staleTime: 900000} // 15 mins
+        = useQuery("categoriesData", () => fetchCategories(), {staleTime: 900000} // 15 mins
     )
-
 
     const wrapCategories = (catCode) => {
         const topCategory = categories.filter(cat => cat.id === catCode).pop()

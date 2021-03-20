@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { useMutation, useQueryClient } from 'react-query'
+import axios from 'axios'
 
 import { makeStyles } from '@material-ui/core/styles'
 import Card from '@material-ui/core/Card'
@@ -76,21 +77,13 @@ export default function ProductCard(props) {
     }
 
     const addProductMutation = useMutation(productId => {
-        return fetch(process.env.REACT_APP_API_ROOT + 
-            '/cart/', { 
-                method: 'PUT', 
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ productId, qty: 1, sessionId: props.sessionId })
-            })
+        return axios.put('/cart', { productId, qty: 1, sessionId: props.sessionId })
         },{
             onSuccess: () => {
-              queryClient.invalidateQueries('cartData')
-              setNotificationVisible(true)
+                queryClient.invalidateQueries('cartData')
+                setNotificationVisible(true)              
             }
-        })
+        })                
 
     const handleAddToCart = (productId) => {
         addProductMutation.mutate(productId)

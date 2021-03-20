@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import queryString from 'query-string'
+import { useQuery } from 'react-query'
+import axios from 'axios'
 
 import Container from '@material-ui/core/Container'
 import Grid from '@material-ui/core/Grid'
@@ -22,8 +24,6 @@ import SearchField from './components/SearchField'
 import SearchByProductIdsField from './components/SearchByProductIdsField'
 import ShoppingBasketButton from './components/ShoppingBasketButton'
 import ProductList from './containers/ProductList'
-
-import { useQuery } from 'react-query'
 
 const useStyles = makeStyles((theme) => ({
     sidebarTitle: {
@@ -57,33 +57,25 @@ function Shop() {
 
     useEffect(() => {
         async function postCartLocal() {
-            let response = await fetch(
-                process.env.REACT_APP_API_ROOT + "/cart/",
-                { method: 'POST' }
-            )
-            response = await response.json()
+            let response = await axios.post('/cart')
 
-            setSessionId(response.sessionId)
-            localStorage.setItem('sessionId', response.sessionId)
+            setSessionId(response.data.sessionId)
+            localStorage.setItem('sessionId', response.data.sessionId)
         }
 
         async function checkSession(sessionId) {
-            let response = await fetch(
-                process.env.REACT_APP_API_ROOT + "/cart/" + sessionId
-            )
+            let response = await axios('/cart/' + sessionId)
 
             if (response.status !== 200) {
                 await postCartLocal()
             }
         }
 
-        if (!sessionId) {
-            postCartLocal()
-        } else {
+        if (sessionId) {
             checkSession(sessionId)
+        } else {
+            postCartLocal()
         }
-
-        // handle wrong sessionId
     }, [sessionId])
 
     const handleChangeRedosled = (event) => {
@@ -187,10 +179,8 @@ function Shop() {
         }
     }
     
-    const fetchProducts = () => fetch(
-        process.env.REACT_APP_API_ROOT + "/products?" + buildQueryParams()
-    ).then((res) => res.json())
-
+    const fetchProducts = async () => { const {data} = await axios('/products?' + buildQueryParams()); return data }
+    
     const { isLoading, data: products, error, isSuccess }
         = useQuery(["productsData", size, page, category, filter, idsSerializedArray, searchInput, order], () =>
             fetchProducts(page, size), { keepPreviousData: true })
