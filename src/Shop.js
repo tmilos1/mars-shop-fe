@@ -193,7 +193,7 @@ function Shop() {
                 </Box>
             </Container>
         </div>
-    );
+    )
 }
 
 export default Shop;
