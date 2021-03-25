@@ -29,11 +29,11 @@ ReactDOM.render(
                 <ReactQueryDevtools />
                 <Router>
                     <Switch>
-                        <Route path="/products">                    
-                            <Shop />
-                        </Route>
                         <Route path="/checkout">                    
                             <Checkout />
+                        </Route>
+                        <Route path="/">                    
+                            <Shop />
                         </Route>
                     </Switch>
                 </Router>

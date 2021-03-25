@@ -12,6 +12,7 @@ import CircularProgress from '@material-ui/core/CircularProgress'
 import IconButton from '@material-ui/core/IconButton'
 import AddIcon from '@material-ui/icons/Add';
 import RemoveIcon from '@material-ui/icons/Remove'
+import DeleteIcon from '@material-ui/icons/Delete';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -31,20 +32,44 @@ const useStyles = makeStyles((theme) => ({
         minWidth: "85px",
         textAlign: "right"
     },
+    listItemCenaNaslov: {
+        margin: theme.spacing(1),
+        minWidth: "85px",
+        textAlign: "center"
+    },
     listItemKolicina: {
         margin: theme.spacing(1),
         minWidth: "120px",
         textAlign: "center",
         marginTop: "-4px"
     },
+    listItemKolicinaNaslov: {
+        margin: theme.spacing(1),
+        minWidth: "120px",
+        textAlign: "center",
+    },
     listItemIznos: {
         margin: theme.spacing(1),
-        width: "85px",
+        width: "95px",
         textAlign: "right",
         [theme.breakpoints.down('xs')]: {
             display: 'none'
         }        
     },
+    listItemIznosNaslov: {
+        margin: theme.spacing(1),
+        width: "95px",
+        textAlign: "center",
+        [theme.breakpoints.down('xs')]: {
+            display: 'none'
+        }        
+    },
+    listItemDelete: {
+        margin: theme.spacing(1),
+        minWidth: "60px",
+        textAlign: "right",
+        marginTop: "-4px"
+    },    
 }))
 
 export default function Cart(props) {
@@ -77,6 +102,14 @@ export default function Cart(props) {
             }
         })
 
+    const deleteProductMutation = useMutation(productId => {
+        return axios.delete('/cart', {data: { productId, sessionId: props.sessionId }})
+        },{
+            onSuccess: () => {
+              queryClient.invalidateQueries('cartData')
+            }
+        })
+
     const handleAddProduct = (productId) => {
         addProductMutation.mutate(productId)
     }
@@ -85,8 +118,38 @@ export default function Cart(props) {
         removeProductMutation.mutate(productId)
     }
 
+    const handleDeleteProduct = (productId) => {
+        deleteProductMutation.mutate(productId)
+    }
+
     return (
         <List className={classes.root}>
+            <ListItem alignItems="flex-start">
+                            <ListItemAvatar className={classes.listItemSlika}>
+                            </ListItemAvatar>
+                            <ListItemText
+                                primary="Naziv"
+                                className={classes.listItemNaziv}
+                            />
+                            <ListItemText
+                                primary="Cena"
+                                className={classes.listItemCenaNaslov}
+                            />
+                            <ListItemText
+                                primary="Kolicina"
+                                className={classes.listItemKolicinaNaslov}
+                            />
+                            <ListItemText
+                                primary="Iznos"
+                                className={classes.listItemIznosNaslov}
+                            />
+                            <ListItemText
+                                className={classes.listItemDelete}
+                            />
+            </ListItem >
+            <Divider />
+
+        
             {isSuccess && Array.isArray(products) && products.length > 0 &&
                 products.map((product, i) => (
                     <div key={product.productId}>
@@ -102,9 +165,7 @@ export default function Cart(props) {
                                 className={classes.listItemNaziv}
                             />
                             <ListItemText
-                                primary={<>
-                                    {product.price} din
-                                </>}
+                                primary={<>{product.price} din</>}
                                 className={classes.listItemCena}
                             />
                             <ListItemText
@@ -130,12 +191,20 @@ export default function Cart(props) {
                                     {addProductMutation.isLoading || removeProductMutation.isLoading ? 
                                         <CircularProgress />
                                         :                 
-                                        <>                
-                                            {product.subTotal}
-                                        </>
+                                        <>{product.subTotal} din</>
                                     }
                                 </>}
                                 className={classes.listItemIznos}
+                            />
+                            <ListItemText
+                                primary={<>
+                                    { 
+                                        <IconButton color="primary" onClick={() => handleDeleteProduct(product.productId)}>
+                                            <DeleteIcon />
+                                        </IconButton>
+                                    }
+                                </>}
+                                className={classes.listItemDelete}
                             />
                         </ListItem>
                         {productsLen !== i + 1 &&
@@ -145,9 +214,9 @@ export default function Cart(props) {
                 ))
             }
             {isSuccess && Array.isArray(products) && products.length == 0 &&
-                <>
+                <div style={{margin: '20px'}}>
                     Korpa je prazna !
-                </>
+                </div>
             }
         </List>
     )

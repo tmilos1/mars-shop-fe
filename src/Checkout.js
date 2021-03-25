@@ -15,6 +15,8 @@ import Button from '@material-ui/core/Button'
 import Icon from '@material-ui/core/Icon'
 import SaveIcon from '@material-ui/icons/Save'
 
+import Cart from './components/Cart'
+
 import useSession from './util/useSession'
 
 const useStyles = makeStyles((theme) => ({
@@ -26,7 +28,7 @@ const useStyles = makeStyles((theme) => ({
     },
     body: {
         width: '100%',
-        padding: '20px'
+        padding: '30px'
     },
     input: {
         minWidth: '30%'
@@ -71,21 +73,29 @@ function Checkout() {
         //     }
         //   );
         // }
-      }
+    }
 
     return (
         <Container>
             <Box component="span" m={5}>
-                <Grid container spacing={2} >
-                    <Grid sm={12} md={12} item >
-                        <Paper className={classes.body} >
-                            <Typography variant="h4">Narudžbenica</Typography>
 
+                <Paper className={classes.body} >
+                    <Typography variant="h4">Narudžbenica</Typography>
+                    <Grid container spacing={2} >
+                        <Grid sm={12} md={12} item >
+                            <Cart sessionId={sessionId} />
+                        </Grid>
+                        <Grid sm={12} md={12} item >
+                            <Typography variant="h5">Ukupno</Typography>
+                        </Grid>                        
+                        <Grid sm={12} md={12} item >
+
+                            <Typography variant="h5">Adresa</Typography>
                             <form className={classes.root} onSubmit={handleSubmit(onSubmitForm)} noValidate autoComplete="off">
                                 <div className={classes.formRow}>
                                     <Controller
                                         name="ime"
-                                        as={                                
+                                        as={
                                             <TextField
                                                 label="Ime"
                                                 variant="outlined"
@@ -104,7 +114,7 @@ function Checkout() {
 
                                     <Controller
                                         name="prezime"
-                                        as={    
+                                        as={
                                             <TextField
                                                 label="Prezime"
                                                 variant="outlined"
@@ -118,13 +128,13 @@ function Checkout() {
                                         defaultValue=""
                                         rules={{
                                             required: "Unesite prezime.",
-                                        }}    
-                                    />                                        
+                                        }}
+                                    />
                                 </div>
                                 <div className={classes.formRow}>
                                     <Controller
                                         name="telefon"
-                                        as={    
+                                        as={
                                             <TextField
                                                 label="Telefon"
                                                 variant="outlined"
@@ -138,11 +148,11 @@ function Checkout() {
                                         defaultValue=""
                                         rules={{
                                             required: "Unesite telefon.",
-                                        }}    
-                                    />                                  
+                                        }}
+                                    />
                                     <Controller
                                         name="email"
-                                        as={    
+                                        as={
                                             <TextField
                                                 label="Email"
                                                 variant="outlined"
@@ -153,13 +163,13 @@ function Checkout() {
                                         defaultValue=""
                                         rules={{
                                             required: true,
-                                        }}    
-                                    />  
+                                        }}
+                                    />
                                 </div>
                                 <div className={classes.formRow}>
                                     <Controller
                                         name="adresa"
-                                        as={    
+                                        as={
                                             <TextField
                                                 label="Adresa"
                                                 variant="outlined"
@@ -173,13 +183,13 @@ function Checkout() {
                                         defaultValue=""
                                         rules={{
                                             required: "Unesite adresu.",
-                                        }}    
-                                    />  
+                                        }}
+                                    />
                                 </div>
                                 <div className={classes.formRow}>
                                     <Controller
                                         name="grad"
-                                        as={    
+                                        as={
                                             <TextField
                                                 label="Grad/Mesto"
                                                 variant="outlined"
@@ -193,11 +203,11 @@ function Checkout() {
                                         defaultValue=""
                                         rules={{
                                             required: "Unesite grad.",
-                                        }}    
-                                    />  
+                                        }}
+                                    />
                                     <Controller
                                         name="ptt"
-                                        as={    
+                                        as={
                                             <TextField
                                                 label="Poštanski broj"
                                                 type="number"
@@ -210,29 +220,32 @@ function Checkout() {
                                         control={control}
                                         defaultValue=""
                                         rules={{
-                                            required: "Unesite ptt broj.",                                
-                                        }}    
-                                    />  
+                                            required: "Unesite ptt broj.",
+                                        }}
+                                    />
                                 </div>
                                 <div className={classes.formRow}>
                                     <Controller
                                         name="napomena"
-                                        as={    
+                                        as={
                                             <TextField
                                                 label="Napomena"
                                                 variant="outlined"
-                                                className={classes.inputBig}   
+                                                className={classes.inputBig}
                                                 multiline
-                                                rows={4}                                                                             
+                                                rows={4}
                                             />
                                         }
                                         control={control}
                                         defaultValue=""
                                         rules={{
                                             required: true,
-                                        }}    
-                                    />  
+                                        }}
+                                    />
                                 </div>
+                            </form>
+                        </Grid>
+                        <Grid sm={12} md={12} item >
                                 <div className={classes.formRow}>
                                     <Button
                                         variant="contained"
@@ -245,10 +258,9 @@ function Checkout() {
                                         Zaključivanje narudžbenice
                                     </Button>
                                 </div>
-                            </form>
-                        </Paper>
+                        </Grid>
                     </Grid>
-                </Grid>
+                </Paper>
             </Box>
         </Container>
     )

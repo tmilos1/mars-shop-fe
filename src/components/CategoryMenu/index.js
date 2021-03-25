@@ -14,7 +14,7 @@ const useStyles = makeStyles((theme) => ({
         maxWidth: 400,
     },
     treeItemLabel: {
-        fontSize: "12px",
+        fontSize: "14px",
         fontFamily: "Helvetica",
     }
 }))

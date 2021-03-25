@@ -102,11 +102,11 @@ function Shop() {
 
     return (
         <div className="App">
-            <Container>
+            <Container maxWidth="xl">
                 <Box component="span" m={5}>
                     <Grid container spacing={2} >
 
-                        <Grid sm={12} md={2} item>
+                        <Grid sm={12} md={3} item>
                             <Accordion defaultExpanded={true} elevation={3}>
                                 <AccordionSummary expandIcon={<ExpandMoreIcon />} >
                                     <Typography className={classes.sidebarTitle} >Kategorije</Typography>
@@ -144,7 +144,7 @@ function Shop() {
                             </Accordion>
                         </Grid>
 
-                        <Grid md={10} item>
+                        <Grid md={9} item>
                             <Grid container justify="space-between">
                                 <Grid md={2} item>
                                     <ProductSortSelect onChange={(e) => dispatch({ type: 'CHANGE_ORDER', data: { order: e.target.value } })}
@@ -171,11 +171,11 @@ function Shop() {
                             <ProductList products={products} isLoading={isLoading} sessionId={sessionId} />
                         </Grid>
 
-                        <Grid sm={false} md={2} item>
+                        <Grid sm={false} md={3} item>
 
                         </Grid>
 
-                        <Grid sm={12} md={10} item>
+                        <Grid sm={12} md={9} item>
                             {isSuccess &&
                                 <div style={{ display: 'flex', justifyContent: 'center' }}>
                                     <Pagination

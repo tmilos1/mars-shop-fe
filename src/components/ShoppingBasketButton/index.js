@@ -8,12 +8,19 @@ import DialogContentText from '@material-ui/core/DialogContentText'
 import DialogTitle from '@material-ui/core/DialogTitle'
 
 import Box from '@material-ui/core/Box'
+import Paper from '@material-ui/core/Paper'
 import Button from '@material-ui/core/Button'
 import ShoppingBasketIcon from '@material-ui/icons/ShoppingBasket'
 
 import Cart from '../Cart'
 
 const useStyles = makeStyles((theme) => ({
+    root: {
+        position: 'fixed',
+        [theme.breakpoints.down('sm')]: {
+            position: 'static',
+        }
+    }
 }))
 
 export default function ShoppingBasketButton(props) {
@@ -42,33 +49,35 @@ export default function ShoppingBasketButton(props) {
     }, [open])
 
     return (
-        <Box>
-            <Button
-                variant="outlined"
-                className={classes.button}
-                startIcon={<ShoppingBasketIcon />}
-                onClick={handleClickOpen()}
-            >Korpa
-            </ Button>
+        <Box className={classes.root} >
+            <Paper>
+                <Button
+                    variant="outlined"
+                    className={classes.button}
+                    startIcon={<ShoppingBasketIcon />}
+                    onClick={handleClickOpen()}
+                >Korpa
+                </ Button>
 
-            <Dialog
-                open={open}
-                onClose={handleClose}
-                scroll={scroll}
-                maxWidth="lg"
-            >
-                <DialogTitle id="scroll-dialog-title">Korpa</DialogTitle>
-                <DialogContent dividers={true}>
+                <Dialog
+                    open={open}
+                    onClose={handleClose}
+                    scroll={scroll}
+                    maxWidth="lg"
+                >
+                    <DialogTitle id="scroll-dialog-title">Korpa</DialogTitle>
+                    <DialogContent dividers={true}>
 
-                    <Cart sessionId={props.sessionId} />
-                    
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={handleClose} color="primary">
-                        Zatvori
-                    </Button>
-                </DialogActions>
-            </Dialog>
+                        <Cart sessionId={props.sessionId} />
+                        
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={handleClose} color="primary">
+                            Zatvori
+                        </Button>
+                    </DialogActions>
+                </Dialog>
+            </Paper>
         </Box>
     )
 }
