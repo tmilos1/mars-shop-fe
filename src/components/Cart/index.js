@@ -125,8 +125,8 @@ export default function Cart(props) {
     return (
         <List className={classes.root}>
             <ListItem alignItems="flex-start">
-                            <ListItemAvatar className={classes.listItemSlika}>
-                            </ListItemAvatar>
+                            <div className={classes.listItemSlika}>
+                            </div>
                             <ListItemText
                                 primary="Naziv"
                                 className={classes.listItemNaziv}
@@ -155,7 +155,7 @@ export default function Cart(props) {
                     <div key={product.productId}>
                         <ListItem alignItems="flex-start">
                             <ListItemAvatar className={classes.listItemSlika}>
-                                <img src={process.env.REACT_APP_API_ROOT + "/slike/proizvodi/manje/" + product.productId + ".jpg"} width="110px" />
+                                <img src={process.env.REACT_APP_API_ROOT + "/slike/proizvodi/manje/" + product.productId + ".jpg"} width="110px" alt={"Product " + product.productId} />
                             </ListItemAvatar>
                             <ListItemText
                                 primary={product.name}
@@ -213,7 +213,7 @@ export default function Cart(props) {
                     </div>
                 ))
             }
-            {isSuccess && Array.isArray(products) && products.length == 0 &&
+            {isSuccess && Array.isArray(products) && products.length === 0 &&
                 <div style={{margin: '20px'}}>
                     Korpa je prazna !
                 </div>

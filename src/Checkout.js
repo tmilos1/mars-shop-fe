@@ -43,6 +43,12 @@ const useStyles = makeStyles((theme) => ({
         display: 'flex',
         gap: '20px',
         width: '100%',
+        marginTop: '15px'
+    },
+    buttonRow: {
+        width: '100%',
+        marginLeft: '-2px',
+        marginTop: '20px'
     }
 }))
 
@@ -243,10 +249,7 @@ function Checkout() {
                                         }}
                                     />
                                 </div>
-                            </form>
-                        </Grid>
-                        <Grid sm={12} md={12} item >
-                                <div className={classes.formRow}>
+                                <div className={classes.buttonRow}>
                                     <Button
                                         variant="contained"
                                         color="primary"
@@ -257,7 +260,8 @@ function Checkout() {
                                     >
                                         Zaključivanje narudžbenice
                                     </Button>
-                                </div>
+                                </div>                                
+                            </form>
                         </Grid>
                     </Grid>
                 </Paper>
