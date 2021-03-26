@@ -72,10 +72,6 @@ const useStyles = makeStyles((theme) => ({
     },    
 }))
 
-const roundToFixed2 = (value) => {
-    return (Math.round(value * 100) / 100).toFixed(2)
-}
-
 export default function Cart(props) {
 
     const classes = useStyles()
@@ -84,15 +80,18 @@ export default function Cart(props) {
     const fetchCart = async () => { 
         const {data} = await axios('/cart/' + props.sessionId); 
 
-        props.onSetTotals({subTotal: data.subTotal, tax: data.tax, total: data.total})
+        if (typeof props.onSetTotals === 'function') {
+            props.onSetTotals({subTotal: data.subTotal, tax: data.tax, total: data.total})
+        }
         return data
     }
     
     const { data, isSuccess } = useQuery(["cartData", props.sessionId], () => fetchCart())
-    const products = data.lines
-
+    
     let productsLen = 0
+    let products
     if (isSuccess) {
+        products = data.lines
         productsLen = products.length
     }
 
@@ -175,7 +174,7 @@ export default function Cart(props) {
                                 className={classes.listItemNaziv}
                             />
                             <ListItemText
-                                primary={<>{roundToFixed2(product.price)} din</>}
+                                primary={<>{product.price} din</>}
                                 className={classes.listItemCena}
                             />
                             <ListItemText
@@ -201,7 +200,7 @@ export default function Cart(props) {
                                     {addProductMutation.isLoading || removeProductMutation.isLoading ? 
                                         <CircularProgress />
                                         :                 
-                                        <>{roundToFixed2(product.subTotal)} din</>
+                                        <>{product.subTotal} din</>
                                     }
                                 </>}
                                 className={classes.listItemIznos}

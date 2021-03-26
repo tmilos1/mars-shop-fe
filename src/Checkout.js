@@ -113,7 +113,7 @@ function Checkout() {
                     <td className={classes.totalsValue}>{totals.subTotal}</td>
                   </tr>
                   <tr>
-                    <td>PDV:</td>
+                    <td>PDV 20%:</td>
                     <td className={classes.totalsValue}>{totals.tax}</td>
                   </tr>
                   <tr>
