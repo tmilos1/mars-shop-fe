@@ -12,7 +12,7 @@ import Paper from '@material-ui/core/Paper'
 import Button from '@material-ui/core/Button'
 import ShoppingBasketIcon from '@material-ui/icons/ShoppingBasket'
 
-import Cart from '../Cart'
+import Cart from '../../containers/Cart'
 
 const useStyles = makeStyles((theme) => ({
     root: {
