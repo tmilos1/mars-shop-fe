@@ -87,7 +87,7 @@ export default function Cart(props) {
     }
 
     const addProductMutation = useMutation(productId => {
-        return axios.put('/cart', { productId, qty: 1, sessionId: props.sessionId })
+        return axios.put('/cartItem', { productId, qty: 1, sessionId: props.sessionId })
         },{
             onSuccess: () => {
               queryClient.invalidateQueries('cartData')
@@ -95,7 +95,7 @@ export default function Cart(props) {
         })
 
     const removeProductMutation = useMutation(productId => {
-        return axios.put('/cart', { productId, qty: -1, sessionId: props.sessionId })
+        return axios.put('/cartItem', { productId, qty: -1, sessionId: props.sessionId })
         },{
             onSuccess: () => {
               queryClient.invalidateQueries('cartData')
@@ -103,7 +103,7 @@ export default function Cart(props) {
         })
 
     const deleteProductMutation = useMutation(productId => {
-        return axios.delete('/cart', {data: { productId, sessionId: props.sessionId }})
+        return axios.delete('/cartItem', {data: { productId, sessionId: props.sessionId }})
         },{
             onSuccess: () => {
               queryClient.invalidateQueries('cartData')

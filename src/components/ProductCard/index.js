@@ -77,7 +77,7 @@ export default function ProductCard(props) {
     }
 
     const addProductMutation = useMutation(productId => {
-        return axios.put('/cart', { productId, qty: 1, sessionId: props.sessionId })
+        return axios.put('/cartItem', { productId, qty: 1, sessionId: props.sessionId })
         },{
             onSuccess: () => {
                 queryClient.invalidateQueries('cartData')
