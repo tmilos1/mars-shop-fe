@@ -1,4 +1,4 @@
-import { useEffect, useReducer } from 'react'
+import { useEffect, useReducer, useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { useQuery } from 'react-query'
 import axios from 'axios'
@@ -49,6 +49,13 @@ const useStyles = makeStyles((theme) => ({
     width: '100%',
     marginLeft: '-2px',
     marginTop: '20px'
+  },
+  totalsLabel: {
+    width: '10em'
+  },
+  totalsValue: {
+    width: '5em',
+    textAlign: 'right'
   }
 }))
 
@@ -56,10 +63,15 @@ const useStyles = makeStyles((theme) => ({
 
 function Checkout() {
   const classes = useStyles()
+  let [totals, setTotals] = useState({subTotal: 0, tax: 0, total: 0})
 
   const sessionId = useSession()
 
   const { handleSubmit, control, errors: fieldsErrors, reset } = useForm()
+
+  const handleSetTotals = (totals) => {
+    setTotals({subTotal: totals.subTotal, tax: totals.tax, total: totals.total})
+  }
 
   const onSubmitForm = async data => {
     console.log(data)
@@ -89,10 +101,30 @@ function Checkout() {
           <Typography variant="h4">Narudžbenica</Typography>
           <Grid container spacing={2} >
             <Grid sm={12} md={12} item >
-              <Cart sessionId={sessionId} />
+              <Cart sessionId={sessionId} onSetTotals={handleSetTotals} />
             </Grid>
             <Grid sm={12} md={12} item >
               <Typography variant="h5">Ukupno</Typography>
+              <br />
+              <Typography variant="body1">
+                <table>
+                  <tr>
+                    <td className={classes.totalsLabel}>Iznos:</td>
+                    <td className={classes.totalsValue}>{totals.subTotal}</td>
+                  </tr>
+                  <tr>
+                    <td>PDV:</td>
+                    <td className={classes.totalsValue}>{totals.tax}</td>
+                  </tr>
+                  <tr>
+                    <td><Box fontWeight={500}>Za uplatu:</Box></td>
+                    <td className={classes.totalsValue}><Box fontWeight={500}>{totals.total}</Box></td>
+                  </tr>
+                </table>
+                <p> Ukoliko je iznos narudžbenice manji od 3.000 dinara, troškove dostave snosi kupac.</p>
+              </Typography>
+
+
             </Grid>
             <Grid sm={12} md={12} item >
 

@@ -72,14 +72,24 @@ const useStyles = makeStyles((theme) => ({
     },    
 }))
 
+const roundToFixed2 = (value) => {
+    return (Math.round(value * 100) / 100).toFixed(2)
+}
+
 export default function Cart(props) {
 
     const classes = useStyles()
     const queryClient = useQueryClient()
     
-    const fetchCart = async () => { const {data} = await axios('/cart/' + props.sessionId); return data }
+    const fetchCart = async () => { 
+        const {data} = await axios('/cart/' + props.sessionId); 
+
+        props.onSetTotals({subTotal: data.subTotal, tax: data.tax, total: data.total})
+        return data
+    }
     
-    const { data: products, isSuccess } = useQuery(["cartData", props.sessionId], () => fetchCart())
+    const { data, isSuccess } = useQuery(["cartData", props.sessionId], () => fetchCart())
+    const products = data.lines
 
     let productsLen = 0
     if (isSuccess) {
@@ -125,27 +135,27 @@ export default function Cart(props) {
     return (
         <List className={classes.root}>
             <ListItem alignItems="flex-start">
-                            <div className={classes.listItemSlika}>
-                            </div>
-                            <ListItemText
-                                primary="Naziv"
-                                className={classes.listItemNaziv}
-                            />
-                            <ListItemText
-                                primary="Cena"
-                                className={classes.listItemCenaNaslov}
-                            />
-                            <ListItemText
-                                primary="Kolicina"
-                                className={classes.listItemKolicinaNaslov}
-                            />
-                            <ListItemText
-                                primary="Iznos"
-                                className={classes.listItemIznosNaslov}
-                            />
-                            <ListItemText
-                                className={classes.listItemDelete}
-                            />
+                <div className={classes.listItemSlika}>
+                </div>
+                <ListItemText
+                    primary="Naziv"
+                    className={classes.listItemNaziv}
+                />
+                <ListItemText
+                    primary="Cena"
+                    className={classes.listItemCenaNaslov}
+                />
+                <ListItemText
+                    primary="Kolicina"
+                    className={classes.listItemKolicinaNaslov}
+                />
+                <ListItemText
+                    primary="Iznos"
+                    className={classes.listItemIznosNaslov}
+                />
+                <ListItemText
+                    className={classes.listItemDelete}
+                />
             </ListItem >
             <Divider />
 
@@ -165,7 +175,7 @@ export default function Cart(props) {
                                 className={classes.listItemNaziv}
                             />
                             <ListItemText
-                                primary={<>{product.price} din</>}
+                                primary={<>{roundToFixed2(product.price)} din</>}
                                 className={classes.listItemCena}
                             />
                             <ListItemText
@@ -191,7 +201,7 @@ export default function Cart(props) {
                                     {addProductMutation.isLoading || removeProductMutation.isLoading ? 
                                         <CircularProgress />
                                         :                 
-                                        <>{product.subTotal} din</>
+                                        <>{roundToFixed2(product.subTotal)} din</>
                                     }
                                 </>}
                                 className={classes.listItemIznos}
