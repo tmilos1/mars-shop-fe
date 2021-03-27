@@ -66,8 +66,8 @@ function AddressForm(props) {
       </Typography>
     )
   }
+
   return (
-    
     <>
       <Typography variant="h5">Adresa</Typography>
       <form className={classes.root} onSubmit={handleSubmit(onSubmitForm)} noValidate autoComplete="off">
@@ -139,9 +139,6 @@ function AddressForm(props) {
             }
             control={control}
             defaultValue=""
-            rules={{
-              required: true,
-            }}
           />
         </div>
         <div className={classes.formRow}>
