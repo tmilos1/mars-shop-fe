@@ -56,7 +56,7 @@ function Checkout() {
               <CheckoutTotals totals={totals} />
             </Grid>
             <Grid sm={12} md={12} item >
-              <AddressForm />
+              <AddressForm sessionId={sessionId} />
             </Grid>
           </Grid>
         </Paper>

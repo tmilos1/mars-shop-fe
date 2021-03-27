@@ -1,14 +1,11 @@
-import { useEffect, useReducer, useState } from 'react'
+import { useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
-import { useQuery } from 'react-query'
 import axios from 'axios'
 import { useForm, Controller } from "react-hook-form"
 
 import TextField from '@material-ui/core/TextField'
 import Button from '@material-ui/core/Button'
-import Icon from '@material-ui/core/Icon'
 import SaveIcon from '@material-ui/icons/Save'
-
 import Typography from '@material-ui/core/Typography'
 
 const useStyles = makeStyles((theme) => ({
@@ -36,34 +33,41 @@ const useStyles = makeStyles((theme) => ({
 
 // https://react-hook-form.com/get-started#IntegratingwithUIlibraries
 
-function AddressForm() {
+function AddressForm(props) {
   const classes = useStyles()
+  const [showForm, setShowForm] = useState(true)
 
-  const { handleSubmit, control, errors: fieldsErrors, reset } = useForm()
-
+  const { handleSubmit, control, errors: fieldsErrors } = useForm()
 
   const onSubmitForm = async data => {
     console.log(data)
-    // const response = await UserService.signIn(data);
-    // const responseData = await response.json();
-    // if (response.ok) setTokenAndConfigureProfile(responseData.token);
-    // else {
-    //   if (responseData.non_field_errors) setGeneralLoginError(responseData.non_field_errors[0]);
-    //   reset(
-    //     {
-    //       email: '',
-    //       password: ''
-    //     },
-    //     {
-    //       errors: true,
-    //       dirtyFields: true
-    //     }
-    //   );
-    // }
+    const response = await axios.post('/checkout', {
+      sessionId: props.sessionId,
+      firstName: data.firstName,
+      lastName: data.lastName,
+      phone: data.phone,
+      email: data.email,
+      address: data.address,
+      city: data.city,
+      postalCode: data.postalCode,      
+      notes: data.notes,
+    })
+
+    if (response.data.order) {
+      setShowForm(false)
+      localStorage.removeItem('sessionId')
+    }
   }
 
-
+  if (!showForm) {
+    return (
+      <Typography variant="h4">
+        Hvala, Vaša narudžbina je uspešno prosleđena!
+      </Typography>
+    )
+  }
   return (
+    
     <>
       <Typography variant="h5">Adresa</Typography>
       <form className={classes.root} onSubmit={handleSubmit(onSubmitForm)} noValidate autoComplete="off">
@@ -200,7 +204,7 @@ function AddressForm() {
         </div>
         <div className={classes.formRow}>
           <Controller
-            name="note"
+            name="notes"
             as={
               <TextField
                 label="Napomena"
