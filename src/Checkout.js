@@ -11,6 +11,7 @@ import Typography from '@material-ui/core/Typography'
 import Cart from './containers/Cart'
 import AddressForm from './containers/AddressForm'
 import CheckoutTotals from './components/CheckoutTotals'
+import CheckoutCartPrices from './components/CheckoutCartPrices'
 
 import useSession from './util/useSession'
 
@@ -47,6 +48,9 @@ function Checkout() {
           <Grid container spacing={2} >
             <Grid sm={12} md={12} item >
               <Cart sessionId={sessionId} onSetTotals={handleSetTotals} />
+            </Grid>
+            <Grid sm={12} md={12} item >
+              <CheckoutCartPrices sessionId={sessionId} />
             </Grid>
             <Grid sm={12} md={12} item >
               <CheckoutTotals totals={totals} />
