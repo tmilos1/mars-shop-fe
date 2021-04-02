@@ -23,6 +23,9 @@ const useStyles = makeStyles((theme) => ({
   },
   formRow: {
     display: 'flex',
+    [theme.breakpoints.down('sm')]: {
+      flexFlow: 'column',
+    },
     gap: '20px',
     width: '100%',
     marginTop: '15px'

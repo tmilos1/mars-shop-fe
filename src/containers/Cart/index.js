@@ -22,6 +22,16 @@ const useStyles = makeStyles((theme) => ({
     root: {
         margin: theme.spacing(1),
     },
+    listItemHeader: {
+        [theme.breakpoints.down('sm')]: {
+            display: 'none'
+        },
+    },
+    listItem: {
+        [theme.breakpoints.down('sm')]: {
+            flexFlow: 'column',
+        },
+    },
     listItemSlika: {
         margin: theme.spacing(1),
         width: "120px",
@@ -34,7 +44,10 @@ const useStyles = makeStyles((theme) => ({
     listItemCena: {
         margin: theme.spacing(1),
         minWidth: "85px",
-        textAlign: "right"
+        textAlign: "right",
+        [theme.breakpoints.down('sm')]: {
+            textAlign: "left"
+        },         
     },
     listItemCenaNaslov: {
         margin: theme.spacing(1),
@@ -45,6 +58,9 @@ const useStyles = makeStyles((theme) => ({
         margin: theme.spacing(1),
         minWidth: "120px",
         textAlign: "center",
+        [theme.breakpoints.down('sm')]: {
+            textAlign: "left"
+        },         
         marginTop: "-4px"
     },
     listItemKolicinaNaslov: {
@@ -72,7 +88,10 @@ const useStyles = makeStyles((theme) => ({
         margin: theme.spacing(1),
         minWidth: "60px",
         textAlign: "right",
-        marginTop: "-4px"
+        marginTop: "-4px",
+        [theme.breakpoints.down('sm')]: {
+            display: 'none'
+        },         
     },    
 }))
 
@@ -137,7 +156,7 @@ export default function Cart(props) {
 
     return (
         <List className={classes.root}>
-            <ListItem alignItems="flex-start">
+            <ListItem alignItems="flex-start" className={classes.listItemHeader}>
                 <div className={classes.listItemSlika}>
                 </div>
                 <ListItemText
@@ -160,9 +179,8 @@ export default function Cart(props) {
                     className={classes.listItemDelete}
                 />
             </ListItem >
-            <Divider />
+            <Divider  className={classes.listItemHeader} />
 
-        
             <TransitionGroup>
             {isSuccess && Array.isArray(products) && products.length > 0 &&
                 products.map((product, i) => (
@@ -172,7 +190,7 @@ export default function Cart(props) {
                         key={product.productId}
                     >
                     <div>
-                        <ListItem alignItems="flex-start">
+                        <ListItem alignItems="flex-start" className={classes.listItem}>
                             <ListItemAvatar className={classes.listItemSlika}>
                                 <img src={process.env.REACT_APP_API_ROOT + "/slike/proizvodi/manje/" + product.productId + ".jpg"} width="110px" alt={"Product " + product.productId} />
                             </ListItemAvatar>

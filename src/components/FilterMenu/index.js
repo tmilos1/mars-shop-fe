@@ -1,6 +1,3 @@
-import { useState } from 'react'
-
-import Paper from '@material-ui/core/Paper'
 import MenuItem from '@material-ui/core/MenuItem'
 import MenuList from '@material-ui/core/MenuList'
 

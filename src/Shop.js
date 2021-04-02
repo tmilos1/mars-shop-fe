@@ -1,4 +1,4 @@
-import { useEffect, useReducer } from 'react'
+import { useEffect, useReducer, useCallback } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { useQuery } from 'react-query'
 import axios from 'axios'
@@ -26,6 +26,9 @@ import SearchField from './components/SearchField'
 import SearchByProductIdsField from './components/SearchByProductIdsField'
 import ShoppingBasketButton from './components/ShoppingBasketButton'
 import ProductList from './containers/ProductList'
+
+import useMediaQuery from '@material-ui/core/useMediaQuery'
+import { useTheme } from '@material-ui/core/styles'
 
 const useStyles = makeStyles((theme) => ({
     sidebarTitle: {
@@ -58,9 +61,12 @@ function Shop() {
     const classes = useStyles()
     const [state, dispatch] = useReducer(shopReducer, initialState)
 
+    const theme = useTheme()
+    const mobile = useMediaQuery(theme.breakpoints.down('sm'))
+
     const sessionId = useSession()
 
-    const buildQueryParams = () => {
+    const buildQueryParams = useCallback(() => {
         return "size=" + state.size
             + "&page=" + state.page
             + "&filter=" + state.filter
@@ -68,7 +74,7 @@ function Shop() {
             + "&search=" + encodeURIComponent(state.searchInput)
             + "&category=" + state.category
             + "&order=" + state.order
-    }        
+    }, [state.category, state.filter, state.idsSerializedArray, state.order, state.page, state.searchInput, state.size]) 
 
     useEffect(() => {
         const buildHistoryObject = () => {
@@ -102,7 +108,7 @@ function Shop() {
 
     return (
         <div className="App">
-            <Container maxWidth="xl">
+            <Container maxWidth="xl" disableGutters={mobile}>
                 <Box component="span" m={5}>
                     <Grid container spacing={2} >
 

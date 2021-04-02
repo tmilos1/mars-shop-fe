@@ -14,11 +14,16 @@ import CheckoutTotals from './components/CheckoutTotals'
 import CheckoutCartPrices from './components/CheckoutCartPrices'
 
 import useSession from './util/useSession'
+import useMediaQuery from '@material-ui/core/useMediaQuery'
+import { useTheme } from '@material-ui/core/styles'
 
 const useStyles = makeStyles((theme) => ({
   body: {
     width: '100%',
-    padding: '30px'
+    padding: '30px',
+    [theme.breakpoints.down('xs')]: {
+      width: 'initial',
+  }      
   },
   totalsLabel: {
     width: '10em'
@@ -32,6 +37,8 @@ const useStyles = makeStyles((theme) => ({
 function Checkout() {
   const classes = useStyles()
   let [totals, setTotals] = useState({subTotal: 0, tax: 0, total: 0})
+  const theme = useTheme()
+  const mobile = useMediaQuery(theme.breakpoints.down('sm'))
 
   const sessionId = useSession()
 
@@ -40,7 +47,7 @@ function Checkout() {
   }
 
   return (
-    <Container>
+    <Container disableGutters={mobile}>
       <Box component="span" m={5}>
 
         <Paper className={classes.body} >

@@ -56,7 +56,7 @@ function CheckoutCartPrices(props) {
         }
 
         postCheckPrices()
-    }, [props.sessionId])
+    }, [props.sessionId, queryClient])
 
     if (!visible) {
         return null
