@@ -2,6 +2,8 @@ import { makeStyles } from '@material-ui/core/styles'
 import { useQuery, useMutation, useQueryClient } from 'react-query'
 import axios from 'axios'
 
+import { TransitionGroup, CSSTransition } from "react-transition-group"
+
 import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
 import ListItemText from '@material-ui/core/ListItemText'
@@ -10,9 +12,11 @@ import Divider from '@material-ui/core/Divider'
 import CircularProgress from '@material-ui/core/CircularProgress'
 
 import IconButton from '@material-ui/core/IconButton'
-import AddIcon from '@material-ui/icons/Add';
+import AddIcon from '@material-ui/icons/Add'
 import RemoveIcon from '@material-ui/icons/Remove'
-import DeleteIcon from '@material-ui/icons/Delete';
+import DeleteIcon from '@material-ui/icons/Delete'
+
+import './index.css'
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -159,9 +163,15 @@ export default function Cart(props) {
             <Divider />
 
         
+            <TransitionGroup>
             {isSuccess && Array.isArray(products) && products.length > 0 &&
                 products.map((product, i) => (
-                    <div key={product.productId}>
+                    <CSSTransition
+                        timeout={400}
+                        classNames="cart-item"
+                        key={product.productId}
+                    >
+                    <div>
                         <ListItem alignItems="flex-start">
                             <ListItemAvatar className={classes.listItemSlika}>
                                 <img src={process.env.REACT_APP_API_ROOT + "/slike/proizvodi/manje/" + product.productId + ".jpg"} width="110px" alt={"Product " + product.productId} />
@@ -220,8 +230,10 @@ export default function Cart(props) {
                             <Divider />
                         }
                     </div>
+                    </CSSTransition>
                 ))
             }
+            </TransitionGroup>
             {isSuccess && Array.isArray(products) && products.length === 0 &&
                 <div style={{margin: '20px'}}>
                     Korpa je prazna !

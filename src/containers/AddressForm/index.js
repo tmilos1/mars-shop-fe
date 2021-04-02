@@ -2,11 +2,14 @@ import { useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import axios from 'axios'
 import { useForm, Controller } from "react-hook-form"
+import { CSSTransition } from "react-transition-group"
 
 import TextField from '@material-ui/core/TextField'
 import Button from '@material-ui/core/Button'
 import SaveIcon from '@material-ui/icons/Save'
 import Typography from '@material-ui/core/Typography'
+
+import './index.css'
 
 const useStyles = makeStyles((theme) => ({
   input: {
@@ -49,7 +52,7 @@ function AddressForm(props) {
       email: data.email,
       address: data.address,
       city: data.city,
-      postalCode: data.postalCode,      
+      postalCode: data.postalCode,
       notes: data.notes,
     })
 
@@ -68,9 +71,9 @@ function AddressForm(props) {
   }
 
   return (
-    <>
-      <Typography variant="h5">Adresa</Typography>
+    <CSSTransition in={true} appear classNames="address-form" unmountOnExit>
       <form className={classes.root} onSubmit={handleSubmit(onSubmitForm)} noValidate autoComplete="off">
+        <Typography variant="h5">Adresa</Typography>
         <div className={classes.formRow}>
           <Controller
             name="firstName"
@@ -225,13 +228,13 @@ function AddressForm(props) {
             size="large"
             className={classes.button}
             startIcon={<SaveIcon />}
-            type="submit"                         
+            type="submit"
           >
             Zaključivanje narudžbenice
           </Button>
         </div>
       </form>
-    </>
+    </CSSTransition>
   )
 }
 
