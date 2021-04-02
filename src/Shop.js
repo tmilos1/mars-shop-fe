@@ -161,6 +161,7 @@ function Shop() {
                                     <SearchField
                                         onSearchChange={(e) => dispatch({ type: 'CHANGE_SEARCH', data: { search: e.target.value } })}
                                         onSearchInput={() => dispatch({ type: 'SEARCH_INPUT' })} 
+                                        onSearchClear={() => dispatch({ type: 'SEARCH_CLEAR' })}
                                         value={state.search} 
                                     />
                                 </Grid>

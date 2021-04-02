@@ -57,6 +57,11 @@ export default function shopReducer(state, action) {
                 ...state,
                 search: action.data.search,
             }
+        case 'SEARCH_CLEAR':
+            return {
+                ...state,
+                search: '',
+            }
         case 'SEARCH_INPUT':
             return {
                 ...state,
