@@ -74,7 +74,7 @@ function AddressForm(props) {
   }
 
   return (
-    <CSSTransition in={true} appear classNames="address-form" unmountOnExit>
+    <CSSTransition in={true} appear classNames="address-form" unmountOnExit timeout={400}>
       <form className={classes.root} onSubmit={handleSubmit(onSubmitForm)} noValidate autoComplete="off">
         <Typography variant="h5">Adresa</Typography>
         <div className={classes.formRow}>
