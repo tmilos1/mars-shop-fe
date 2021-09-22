@@ -32,7 +32,11 @@ const useStyles = makeStyles((theme) => ({
         height: 80,
         width: '100%',
         background: 'white',
+        color: 'black',
         fontFamily: 'Roboto, sans-serif',
+        fontSize: '14px',
+        fontWeight: 'normal',
+        lineHeight: 'initial',
         display: 'flex',
         justifyContent: 'space-around',
         alignItems: 'center',
@@ -68,12 +72,15 @@ const useStyles = makeStyles((theme) => ({
     dl: {
         fontSize: '14px',
         display: 'flex',
-        flexFlow: 'row wrap'
+        flexFlow: 'row wrap',
+        margin: '0',
+        fontWeight: 'normal'
     },
     dt: {
         padding: '2px 4px',
         flexBasis: '45%',
         textAlign: 'right',
+        fontWeight: 'normal'
     },
     dd: {
         flexBasis: '40%',

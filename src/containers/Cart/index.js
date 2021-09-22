@@ -168,7 +168,7 @@ export default function Cart(props) {
                     className={classes.listItemCenaNaslov}
                 />
                 <ListItemText
-                    primary="Kolicina"
+                    primary="Količina"
                     className={classes.listItemKolicinaNaslov}
                 />
                 <ListItemText

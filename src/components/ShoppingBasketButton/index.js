@@ -16,6 +16,7 @@ import Cart from '../../containers/Cart'
 const useStyles = makeStyles((theme) => ({
     root: {
         position: 'fixed',
+        zIndex: '10',
         [theme.breakpoints.down('sm')]: {
             position: 'static',
         }

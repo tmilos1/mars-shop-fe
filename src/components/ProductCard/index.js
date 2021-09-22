@@ -20,7 +20,7 @@ const useStyles = makeStyles((theme) => ({
         fontSize: '18px'
     },
     header: {
-        height: "60px"
+        height: "70px"
     },
     media: {
         height: 0,
@@ -35,7 +35,9 @@ const useStyles = makeStyles((theme) => ({
         padding: '2px 4px',
         flexBasis: '45%',
         textAlign: 'right',
-        fontFamily: 'Roboto, sans-serif'
+        // fontFamily: 'Roboto, sans-serif',
+        fontWeight: 'initial',
+        lineHeight: 'initial'
     },
     dd: {
         flexBasis: '40%',
@@ -133,6 +135,7 @@ export default function ProductCard(props) {
                     <Button
                         variant="outlined"
                         color="primary"
+                        style={{width: "200px"}}
                         startIcon={<ShoppingCartIcon />}
                         onClick={() => handleAddToCart(props.product.productId)}
                     >
