@@ -5,6 +5,8 @@ import axios from 'axios'
 
 import useSession from './util/useSession'
 import shopReducer from './util/shopReducer'
+import getInitialState from './util/initialState'
+import { useLocation } from "react-router-dom"
 
 import Container from '@material-ui/core/Container'
 import Grid from '@material-ui/core/Grid'
@@ -45,21 +47,11 @@ const useStyles = makeStyles((theme) => ({
  * var search - current search value, don't trigger api fetch on each value change
  * var searchInput - pressed search button or pressed enter - trigger api fetch
  */
-const initialState = {
-    order: "Naziv",
-    page: 1,
-    size: 15,
-    category: '',
-    filter: 'svi',
-    ids: '',
-    idsSerializedArray: '',
-    search: '',
-    searchInput: ''
-}
 
 function Shop() {
     const classes = useStyles()
-    const [state, dispatch] = useReducer(shopReducer, initialState)
+    let location = useLocation()
+    const [state, dispatch] = useReducer(shopReducer, getInitialState(location))
 
     const theme = useTheme()
     const mobile = useMediaQuery(theme.breakpoints.down('sm'))
