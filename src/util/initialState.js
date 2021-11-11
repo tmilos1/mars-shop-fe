@@ -16,6 +16,8 @@ function updateInitialFromUrl(location) {
 
     params.forEach(param => {
         const urlParam = new URLSearchParams(location.search).get(param)
+        if (!urlParam || urlParam === "null" || urlParam === "0") return
+
         switch (param) {
             case "size":
             case "page":
